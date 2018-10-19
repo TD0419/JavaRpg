@@ -9,8 +9,9 @@ import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class ObjBattleManager extends Obj
+public class ObjBattleManager extends Obj implements Runnable
 {
+    boolean m_is_battle_command;
     boolean m_is_battle;
 
     private ObjMessageWindow m_message_window;
@@ -38,12 +39,12 @@ public class ObjBattleManager extends Obj
     }
 
     @Override
-    public void Update()
+    public void run()
     {
-        if(m_player_command.m_attack_button.GetTouchBotton() == true)
-        {
-            m_is_battle = true;
-        }
+//        if(m_player_command.m_attack_button.GetTouchBotton() == true)
+//        {
+//            m_is_battle = true;
+//        }
         // 速さの速い順に並べる
 
         if(m_is_battle == true)
@@ -51,8 +52,10 @@ public class ObjBattleManager extends Obj
             // 行動
             for(Iterator<ObjBattle>itr = object_list.iterator(); itr.hasNext();)
             {
-                itr.next().Attack();
-                
+                int a = itr.next().Attack();
+                itr.next().Defense(a);
+
+                Stop_Touch_Move();
             }
 
             // 全員行動が終わったら、
@@ -64,11 +67,46 @@ public class ObjBattleManager extends Obj
     }
 
     @Override
+    public void Update()
+    {
+        if(m_player_command.m_attack_button.GetTouchBotton() == true)
+        {
+            m_is_battle = true;
+        }
+        // 速さの速い順に並べる
+
+//        if(m_is_battle == true)
+//        {
+//            // 行動
+//            for(Iterator<ObjBattle>itr = object_list.iterator(); itr.hasNext();)
+//            {
+//                itr.next().Attack();
+//
+//            }
+//
+//            // 全員行動が終わったら、
+//            m_is_battle = false; // 一時的に戦闘シーンを止める
+//
+//            // 戦闘コマンドを復活させる
+//            m_player_command.SetLookAt(true);
+//        }
+    }
+
+    @Override
     public void Draw(GL10 gl)
     {
         for(Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext();)
         {
             itr.next().Draw(gl);
+        }
+    }
+
+    // 画面をタッチするまで動かなくする関数
+    private void Stop_Touch_Move()
+    {
+        while(true)
+        {
+            if(Global.touch_push == true) break;
         }
     }
 }

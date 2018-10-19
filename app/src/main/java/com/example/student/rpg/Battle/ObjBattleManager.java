@@ -9,9 +9,10 @@ import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class ObjBattleManager extends Obj
+public class ObjBattleManager extends Obj implements Runnable
 {
-    boolean m_is_battle;
+    boolean m_is_battle_command; // バトルコマンドが押されたか
+    boolean m_is_battle_exit;    // バトルが終了したか
 
     private ObjMessageWindow m_message_window;
     private ObjPlayerCommand m_player_command;
@@ -35,32 +36,55 @@ public class ObjBattleManager extends Obj
 
         m_battle_enemy = new ObjBattleEnemy();
         object_list.add(m_battle_enemy);
+
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     @Override
-    public void Update()
+    public void run()
     {
-        if(m_player_command.m_attack_button.GetTouchBotton() == true)
-        {
-            m_is_battle = true;
-        }
+        //m_message_window.StringDraw("どうする？あいふる？");
+
+        Stop_Attack_Move();
+
+        m_player_command.SetLookAt(false);
         // 速さの速い順に並べる
 
-        if(m_is_battle == true)
+        // 行動
+        for(Iterator<ObjBattle>itr = object_list.iterator(); itr.hasNext();)
         {
-            // 行動
-            for(Iterator<ObjBattle>itr = object_list.iterator(); itr.hasNext();)
-            {
-                itr.next().Attack();
-                
-            }
+             ObjBattle obj_battle = itr.next();
+             ObjBattle.Attack_info attack = obj_battle.Attack();
+             ObjBattle.State_Info state = obj_battle.GetState();
 
-            // 全員行動が終わったら、
-            m_is_battle = false; // 一時的に戦闘シーンを止める
+             int count = 0;
+             // 無限ループなのでbreakできるかどうかの確認は怠らないようにする
+             while(true)
+             {
+                count++;
+                ObjBattle enemy_obj_battle = itr.next();
 
-            // 戦闘コマンドを復活させる
-            m_player_command.SetLookAt(true);
+                if(count == attack.enemy_number)
+                {
+                    // 計算式
+
+                    // ダメージを与える
+                    enemy_obj_battle.Defense(state.attack);
+                    m_message_window.StringDraw(enemy_obj_battle.m_name + "に" + state.attack + "のダメージを与えた");
+                    break;
+                }
+             }
+
+             Stop_Touch_Move();
         }
+
+        // 全員行動が終わったら、
+        m_is_battle_command = false; // 一時的に戦闘シーンを止める
+
+        // 戦闘コマンドを復活させる
+        m_player_command.SetLookAt(true);
+
     }
 
     @Override
@@ -69,6 +93,28 @@ public class ObjBattleManager extends Obj
         for(Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext();)
         {
             itr.next().Draw(gl);
+        }
+    }
+
+    // 画面をタッチするまで動かなくする関数
+    private void Stop_Touch_Move()
+    {
+        while(true)
+        {
+            if(Global.touch_push == true) break;
+        }
+    }
+
+    // 戦闘コマンドをタッチするまで動かなくする関数
+    private void Stop_Attack_Move()
+    {
+        while (true)
+        {
+            if(m_player_command.m_attack_button.GetTouchButton() == true)
+            {
+                m_player_command.m_attack_button.SetTouchButton(false);
+                break;
+            }
         }
     }
 }

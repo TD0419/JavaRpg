@@ -12,5 +12,6 @@ public class Button_Data
         y = pos_y;
     }
 
-    public boolean GetTouchBotton() { return touch; }
+    public boolean GetTouchButton() { return touch; }
+    public void SetTouchButton(boolean f) { touch = f;}
 }

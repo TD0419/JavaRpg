@@ -13,7 +13,8 @@ import static com.example.student.rpg.MyRenderer.m_messege_window_texture;
 
 public class ObjMessageWindow extends Obj
 {
-    private int m_window_font_texture;
+    private int m_window_font_texture = -1;
+    boolean a = true;
 
     public ObjMessageWindow()
     {
@@ -26,7 +27,8 @@ public class ObjMessageWindow extends Obj
         GraphicUtil.drawTexture(Global.gl,0.f, -0.5f, 3.f,1.f, m_messege_window_texture);
 
         // 文字表示
-        GraphicUtil.drawTexture(Global.gl,-1.2f, -0.3f, 0.3f,0.3f, m_window_font_texture);
+        if(m_window_font_texture != -1)
+            GraphicUtil.drawTexture(Global.gl,-1.2f, -0.3f, 0.3f,0.3f, m_window_font_texture);
     }
 
     // メッセージウィンドウから文字を表示

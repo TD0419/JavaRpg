@@ -15,14 +15,11 @@ public class ObjBattleEnemy extends ObjBattle
 
     public ObjBattleEnemy()
     {
-        m_state_info.hp = 100;
+        m_state_info.hp = 90;
         m_state_info.attack = 4;
         m_state_info.speed = 102;
-    }
 
-    public void Defense()
-    {
-        // ダメージ計算
+        m_attack_info.enemy_number = 1;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class ObjBattleEnemy extends ObjBattle
         StringTextureUpdate("敵 HP : " + String.valueOf(m_state_info.hp),
                 WHITE);
 
-        GraphicUtil.drawTexture(gl, 0.f, 1.f,
+        GraphicUtil.drawTexture(gl, 0.f, 0.8f,
                 1.f, 0.5f, m_hp_font_texture);
     }
 

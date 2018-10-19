@@ -43,8 +43,8 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
         m_object_init_flag = true;
 
-        m_battle_manager = new ObjBattleManager();
-        ObjectManager.Insert(m_battle_manager);
+//        m_battle_manager = new ObjBattleManager();
+//        ObjectManager.Insert(m_battle_manager);
 
 //        m_battle_player = new ObjBattlePlayer();
 //        ObjectManager.Insert(m_battle_player);
@@ -125,6 +125,12 @@ public class MyRenderer implements GLSurfaceView.Renderer
         //m_left_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.left_button);
         //m_right_botton_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.right_button);
         //m_down_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.buttom_button);
+
+        if(m_object_init_flag == true)
+        {
+            m_battle_manager = new ObjBattleManager();
+            ObjectManager.Insert(m_battle_manager);
+        }
     }
 
     @Override

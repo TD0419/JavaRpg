@@ -16,15 +16,19 @@ public class ObjBattlePlayer extends ObjBattle
 
     public ObjBattlePlayer()
     {
+        m_name = "主人公";
+
         m_state_info.hp = 100;
         m_state_info.attack = 10;
         m_state_info.speed = 100;
+
+        m_attack_info.enemy_number = 2;
     }
 
     @Override
     public void Draw(GL10 gl)
     {
-        StringTextureUpdate("主人公 HP : " + String.valueOf(m_state_info.hp),
+        StringTextureUpdate(m_name + " HP : " + String.valueOf(m_state_info.hp),
                 WHITE);
 
         GraphicUtil.drawTexture(gl, 0.f, 0.f,

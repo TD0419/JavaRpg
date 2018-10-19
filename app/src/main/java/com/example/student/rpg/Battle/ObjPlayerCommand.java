@@ -23,7 +23,7 @@ public class ObjPlayerCommand extends Obj
 
     public ObjPlayerCommand()
     {
-        m_is_look = false;
+        m_is_look = true;
         m_attack_button_width = 0.5f;
         m_attack_button_height = 0.5f;
         m_attack_button_aabb.top    = m_attack_button.y + m_attack_button_height / 2.f;
@@ -35,8 +35,6 @@ public class ObjPlayerCommand extends Obj
     @Override
     public void Update()
     {
-        m_attack_button.touch = false;
-
         // このオブジェクトが見える状態なら
         if(m_is_look == true)
         {

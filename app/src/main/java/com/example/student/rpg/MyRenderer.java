@@ -20,8 +20,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
     private int mWidth; // 画面の横幅
     private int mHieght; // 画面の縦幅
 
-    private boolean m_object_init_flag; // ゲームオブジェクト生成フラグ
-
     public static int m_player_texture;
     public static int m_title_back_texture;
     public static int m_attack_select_texture;
@@ -40,8 +38,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public MyRenderer(Context context)
     {
         Global.context = context;
-
-        m_object_init_flag = true;
 
 //        m_battle_manager = new ObjBattleManager();
 //        ObjectManager.Insert(m_battle_manager);
@@ -73,8 +69,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
         ObjectManager.Draw(gl);
 
         gl.glDisable(GL10.GL_BLEND);
-
-        Global.touch_push = false;
     }
 
     @Override
@@ -126,10 +120,14 @@ public class MyRenderer implements GLSurfaceView.Renderer
         //m_right_botton_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.right_button);
         //m_down_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.buttom_button);
 
-        if(m_object_init_flag == true)
+        // 文字マップ情報をクリア
+        FontTexture.MapClear();
+
+        if(Global.is_object_create == true)
         {
             m_battle_manager = new ObjBattleManager();
             ObjectManager.Insert(m_battle_manager);
+            Global.is_object_create = false;
         }
     }
 

@@ -9,9 +9,12 @@ import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class ObjBattleManager extends Obj
+import static android.graphics.Color.WHITE;
+
+public class ObjBattleManager extends Obj implements Runnable
 {
-    boolean m_is_battle;
+    boolean m_is_battle_command; // バトルコマンドが押されたか
+    boolean m_is_battle_exit;    // バトルが終了したか
 
     private ObjMessageWindow m_message_window;
     private ObjPlayerCommand m_player_command;
@@ -43,7 +46,7 @@ public class ObjBattleManager extends Obj
     @Override
     public void run()
     {
-        //m_message_window.StringDraw("どうする？あいふる？");
+        m_message_window.SetMsseageText("どうする？あいふる？");;
 
         Stop_Attack_Move();
 
@@ -58,11 +61,11 @@ public class ObjBattleManager extends Obj
              ObjBattle.State_Info state = obj_battle.GetState();
 
              int count = 0;
-             // 無限ループなのでbreakできるかどうかの確認は怠らないようにする
-             while(true)
+
+            for(Iterator<ObjBattle>itr2 = object_list.iterator(); itr.hasNext();)
              {
                 count++;
-                ObjBattle enemy_obj_battle = itr.next();
+                ObjBattle enemy_obj_battle = itr2.next();
 
                 if(count == attack.enemy_number)
                 {
@@ -70,7 +73,8 @@ public class ObjBattleManager extends Obj
 
                     // ダメージを与える
                     enemy_obj_battle.Defense(state.attack);
-                    m_message_window.StringDraw(enemy_obj_battle.m_name + "に" + state.attack + "のダメージを与えた");
+                    m_message_window.SetMsseageText(
+                            enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
                     break;
                 }
              }
@@ -100,7 +104,11 @@ public class ObjBattleManager extends Obj
     {
         while(true)
         {
-            if(Global.touch_push == true) break;
+            if(Global.touch_push == true)
+            {
+                Global.touch_push = false;
+                break;
+            }
         }
     }
 

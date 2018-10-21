@@ -15,7 +15,7 @@ public class ObjPlayerCommand extends Obj
     boolean m_is_look;
 
     Button_Data m_attack_button =
-            new Button_Data(0.f, -0.5f);
+            new Button_Data(0.f, -0.8f);
     float m_attack_button_width;
     float m_attack_button_height;
     Collision.AABB m_attack_button_aabb =
@@ -45,6 +45,8 @@ public class ObjPlayerCommand extends Obj
                 {
                     m_attack_button.touch = true;
                 }
+
+                Global.touch_push = false;
             }
         }
     }
@@ -55,7 +57,7 @@ public class ObjPlayerCommand extends Obj
         // このオブジェクトが見える状態なら
         if(m_is_look == true)
         {
-            GraphicUtil.drawTexture(Global.gl, 0.f, -0.5f, 0.5f, 0.5f, m_attack_select_texture);
+            GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y, 0.5f, 0.5f, m_attack_select_texture);
         }
     }
 

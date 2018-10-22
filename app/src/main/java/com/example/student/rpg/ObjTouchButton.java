@@ -28,8 +28,8 @@ public class ObjTouchButton extends Obj
     {
 //        m_left_button.touch = false;
 
-        if(Global.touch_push == true)
-        {
+//        if(Global.touch_push == true)
+//        {
             // 全てのボタンの当たり判定チェック
 //            if(CollisioCircleAndPoint(m_left_button.x, m_left_button.y,
 //                    final_circle_radius, Global.touch_x, Global.touch_y))
@@ -48,7 +48,7 @@ public class ObjTouchButton extends Obj
 //            {
 //                m_bottom_button.touch = true;
 //            }
-        }
+//        }
     }
 
     @Override

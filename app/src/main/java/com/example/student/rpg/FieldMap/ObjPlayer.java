@@ -29,17 +29,17 @@ public class ObjPlayer extends Obj
     @Override
     public void Update()
     {
-        if(Global.touch_push == true)
-        {
-            // プレイヤーの現在地をマップ位置に変換
-            int player_map_pos[] = m_objmap.PosConvertMapPos(m_x, m_y);
-
-            // タッチした位置をマップ位置に変換
-            int touch_map_pos[] = m_objmap.PosConvertMapPos(Global.touch_x, Global.touch_y);
-
-            // 最短ルート取得
-            m_objmap.Shortest_Route(player_map_pos[0], player_map_pos[1], touch_map_pos[0], touch_map_pos[1]);
-        }
+//        if(Global.touch_push == true)
+//        {
+//            // プレイヤーの現在地をマップ位置に変換
+//            int player_map_pos[] = m_objmap.PosConvertMapPos(m_x, m_y);
+//
+//            // タッチした位置をマップ位置に変換
+//            int touch_map_pos[] = m_objmap.PosConvertMapPos(Global.touch_x, Global.touch_y);
+//
+//            // 最短ルート取得
+//            m_objmap.Shortest_Route(player_map_pos[0], player_map_pos[1], touch_map_pos[0], touch_map_pos[1]);
+//        }
     }
 
     @Override

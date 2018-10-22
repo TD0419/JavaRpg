@@ -64,6 +64,6 @@ public class ObjPlayerCommand extends Obj
     // 戦闘コマンドが見えて、使えるかどうかの設定
     public void SetLookAt(boolean flag)
     {
-            m_is_look = flag;
+        m_is_look = flag;
     }
 }

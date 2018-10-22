@@ -24,6 +24,4 @@ public class Global
 
     public static boolean touch_push = false; // 画面を押した瞬間
     public static boolean touch_leave = false;// 画面を押しているとき
-
-    public final static int message_window_res_id = 1000;
 }

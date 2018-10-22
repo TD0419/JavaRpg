@@ -18,6 +18,9 @@ public class FontTexture
     public static final void DrawString(GL10 gl, float x, float y, float width, float height, String text,
                                   float r, float g, float b, float a )
     {
+        // 文字情報がなければ、終了
+        if(text == null) return;
+
         for(int i = 0; i < text.length(); i++)
         {
             // 文字を一つずつ分ける

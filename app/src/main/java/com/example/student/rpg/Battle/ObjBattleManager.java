@@ -9,12 +9,9 @@ import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import static android.graphics.Color.WHITE;
-
 public class ObjBattleManager extends Obj implements Runnable
 {
     boolean m_is_battle_command; // バトルコマンドが押されたか
-    boolean m_is_battle_exit;    // バトルが終了したか
 
     private ObjMessageWindow m_message_window;
     private ObjPlayerCommand m_player_command;
@@ -46,48 +43,54 @@ public class ObjBattleManager extends Obj implements Runnable
     @Override
     public void run()
     {
-        m_message_window.SetMsseageText("どうする？あいふる？");;
-
-        Stop_Attack_Move();
-
-        m_player_command.SetLookAt(false);
-        // 速さの速い順に並べる
-
-        // 行動
-        for(Iterator<ObjBattle>itr = object_list.iterator(); itr.hasNext();)
+        while(true)
         {
-             ObjBattle obj_battle = itr.next();
-             ObjBattle.Attack_info attack = obj_battle.Attack();
-             ObjBattle.State_Info state = obj_battle.GetState();
+            m_message_window.SetMsseageText("どうする？あいふる？");
 
-             int count = 0;
+            // 戦闘コマンドを押すまで処理を止める
+            Stop_Attack_Move();
 
-            for(Iterator<ObjBattle>itr2 = object_list.iterator(); itr.hasNext();)
-             {
-                count++;
-                ObjBattle enemy_obj_battle = itr2.next();
+            // 戦闘コマンドをみえなくして、使えなくする
+            m_player_command.SetLookAt(false);
 
-                if(count == attack.enemy_number)
+            // 速さの速い順に並べる(未実装)
+
+            // 行動
+            for (Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext(); )
+            {
+                ObjBattle obj_battle = itr.next();
+                ObjBattle.Attack_info attack = obj_battle.Attack();
+                ObjBattle.State_Info state = obj_battle.GetState();
+
+                int count = 0;
+
+                for (Iterator<ObjBattle> itr2 = object_list.iterator(); itr2.hasNext(); )
                 {
-                    // 計算式
+                    count++;
+                    ObjBattle enemy_obj_battle = itr2.next();
 
-                    // ダメージを与える
-                    enemy_obj_battle.Defense(state.attack);
-                    m_message_window.SetMsseageText(
-                            enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
-                    break;
+                    if (count == attack.enemy_number)
+                    {
+                        // 計算式
+
+                        // ダメージを与える
+                        enemy_obj_battle.Defense(state.attack);
+                        m_message_window.SetMsseageText(
+                                enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
+                        break;
+                    }
                 }
-             }
 
-             Stop_Touch_Move();
+                // 画面をタッチするまで処理を止める
+                Stop_Touch_Move();
+            }
+
+            // 全員行動が終わったら、
+            m_is_battle_command = false; // 一時的に戦闘シーンを止める
+
+            // 戦闘コマンドを復活させる
+            m_player_command.SetLookAt(true);
         }
-
-        // 全員行動が終わったら、
-        m_is_battle_command = false; // 一時的に戦闘シーンを止める
-
-        // 戦闘コマンドを復活させる
-        m_player_command.SetLookAt(true);
-
     }
 
     @Override

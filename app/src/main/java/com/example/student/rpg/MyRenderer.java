@@ -24,6 +24,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public static int m_title_back_texture;
     public static int m_attack_select_texture;
     public static int m_messege_window_texture;
+    public static int m_block_texture;
 
     private ObjBattleManager m_battle_manager;
     private ObjBattlePlayer m_battle_player;
@@ -49,11 +50,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
 //        m_title_background = new ObjBackGround(0.f, 0.f);
 //        ObjectManager.Insert(m_title_background);
-
-//        m_map = new ObjMap();
-//        ObjectManager.Insert(m_map);
-//        m_player = new ObjPlayer(0.f, 0.f, m_map);
-//        ObjectManager.Insert(m_player);
 
 //        m_touch_button = new ObjTouchButton();
 //        ObjectManager.Insert(m_touch_button);
@@ -116,6 +112,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
         //m_title_back_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.title_back_ground);
         m_attack_select_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.attack_select);
         m_messege_window_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.box_red);
+        m_block_texture          = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.normalice_block);
         //m_left_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.left_button);
         //m_right_botton_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.right_button);
         //m_down_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.buttom_button);
@@ -125,8 +122,15 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
         if(Global.is_object_create == true)
         {
-            m_battle_manager = new ObjBattleManager();
-            ObjectManager.Insert(m_battle_manager);
+//            m_battle_manager = new ObjBattleManager();
+//            ObjectManager.Insert(m_battle_manager);
+
+            m_player = new ObjPlayer(0.f, 0.f, m_map);
+            ObjectManager.Insert(m_player);
+
+            m_map = new ObjMap();
+            ObjectManager.Insert(m_map);
+
             Global.is_object_create = false;
         }
     }

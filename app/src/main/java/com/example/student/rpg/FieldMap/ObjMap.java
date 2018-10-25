@@ -1,37 +1,67 @@
 package com.example.student.rpg.FieldMap;
 
+import com.example.student.rpg.GraphicUtil;
+import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.microedition.khronos.opengles.GL10;
+
 public class ObjMap extends Obj
 {
-    Map<Integer, Map<Integer, Integer>> m_map = new LinkedHashMap<Integer, Map<Integer, Integer>>();
+    final int final_map_height = 10;
+    final int final_map_width = 10;
+    final float final_object_size = 0.2f;
 
-    //
+    //Map<Integer, Map<Integer, Integer>> m_map = new LinkedHashMap<Integer, Map<Integer, Integer>>();
+    int[][] m_map_data_array =
+            {
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, },
+            };
+
+    // マップの種類
     enum Map_Kind
     {
-        // 通行可能
-        // 通行不可
+        None,       // 通行可能
+        Impassable, // 通行不可
         // マップ遷移
     }
 
-    final int final_map_height = 10;
-    final int final_map_width = 10;
-    final float final_object_size = 0.1f;
 
     public ObjMap()
     {
         // マップ情報を初期化
+//        for(int y = 0; y < final_map_height; y++)
+//        {
+//            Map<Integer, Integer> tempMap = new LinkedHashMap<Integer, Integer>();
+//            for(int x = 0; x < final_map_width; x++)
+//            {
+//                tempMap.put(x,0);
+//            }
+//            m_map.put(y, tempMap);
+//        }
+    }
+
+    @Override
+    public void Draw(GL10 gl)
+    {
         for(int y = 0; y < final_map_height; y++)
         {
-            Map<Integer, Integer> tempMap = new LinkedHashMap<Integer, Integer>();
             for(int x = 0; x < final_map_width; x++)
             {
-                tempMap.put(x,0);
+                GraphicUtil.drawTexture(gl, m_x, m_y, final_object_size, final_object_size, MyRenderer.m_block_texture);
             }
-            m_map.put(y, tempMap);
         }
     }
 

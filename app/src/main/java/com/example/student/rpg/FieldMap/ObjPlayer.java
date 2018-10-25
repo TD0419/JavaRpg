@@ -40,6 +40,12 @@ public class ObjPlayer extends Obj
 //            // 最短ルート取得
 //            m_objmap.Shortest_Route(player_map_pos[0], player_map_pos[1], touch_map_pos[0], touch_map_pos[1]);
 //        }
+
+        if(Global.touch_push == true)
+        {
+            // プレイヤーの現在地をマップ位置に変換
+
+        }
     }
 
     @Override

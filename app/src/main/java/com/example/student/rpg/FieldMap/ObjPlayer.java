@@ -44,7 +44,7 @@ public class ObjPlayer extends Obj
         if(Global.touch_push == true)
         {
             // プレイヤーの現在地をマップ位置に変換
-
+            //m_objmap.Shortest_Route(0.f,0.f, 1.f, 1.f);
         }
     }
 

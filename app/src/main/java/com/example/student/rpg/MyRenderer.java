@@ -125,11 +125,11 @@ public class MyRenderer implements GLSurfaceView.Renderer
 //            m_battle_manager = new ObjBattleManager();
 //            ObjectManager.Insert(m_battle_manager);
 
-            m_player = new ObjPlayer(0.f, 0.f, m_map);
-            ObjectManager.Insert(m_player);
-
             m_map = new ObjMap();
             ObjectManager.Insert(m_map);
+
+            m_player = new ObjPlayer(0.2f, -0.2f, m_map);
+            ObjectManager.Insert(m_player);
 
             Global.is_object_create = false;
         }

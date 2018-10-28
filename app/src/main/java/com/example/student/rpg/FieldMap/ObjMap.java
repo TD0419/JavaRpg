@@ -14,7 +14,7 @@ public class ObjMap extends Obj
 {
     final int final_map_height = 10;
     final int final_map_width = 10;
-    final float final_object_size = 0.2f;
+    public final static float final_object_size = 0.2f;
     final float final_object_size_half = final_object_size / 2.f;
     final int final_not_search = 99999;
 
@@ -93,6 +93,27 @@ public class ObjMap extends Obj
     // 引数は全てのマップの要素数にする
     public ArrayList<Point> Shortest_Route(Point start_point, Point end_point)
     {
+        // スタートとゴールの場所がマップの範囲内じゃなければ、処理を終了させる
+        if (Map_In_A_Range_Check(start_point) == false ||
+                Map_In_A_Range_Check(end_point)   == false)
+        {
+            return null;
+        }
+
+        // スタートまたはゴールが通れない位置にある場合は、処理を終了させる
+        if (m_map_data_array[start_point.y][start_point.x] == Map_Kind.Impassable.getInt() ||
+                m_map_data_array[end_point.y][end_point.x] == Map_Kind.Impassable.getInt())
+        {
+            return null;
+        }
+
+        // 現在の位置が目的地についていたら処理終了させる
+        if (start_point.x == end_point.x &&
+                start_point.y == end_point.y)
+        {
+            return null;
+        }
+
         // 探索配列を作成
         int[][] search_map = new int[final_map_height][final_map_width];
         for(int y = 0; y < final_map_height; y++)
@@ -128,6 +149,9 @@ public class ObjMap extends Obj
             next_point.x = start_point.x + direction[i].x;
             next_point.y = start_point.y + direction[i].y;
 
+            // 範囲内外なら違う道を探す
+            if (Map_In_A_Range_Check(next_point) == false) continue;
+
             // 通行可能かどうか
             if(m_map_data_array[next_point.y][next_point.x] == Map_Kind.Impassable.getInt()) continue;
 
@@ -156,7 +180,7 @@ public class ObjMap extends Obj
         int distance;
         distance = search_map[end_point.y][end_point.x];
 
-        shortest_route.add(new Point(end_point.y, end_point.x));
+        shortest_route.add(new Point(end_point.x, end_point.y));
         now_point = end_point;
 
         for(int i = 0; i < 4; i++)
@@ -172,7 +196,7 @@ public class ObjMap extends Obj
                 i = -1; // ループを最初からにする
                 distance--;
                 // 最短ルートに登録
-                shortest_route.add(new Point(next_point.y, next_point.x));
+                shortest_route.add(new Point(next_point.x, next_point.y));
                 now_point = next_point;
 
                 if(distance == 2) break;
@@ -195,5 +219,17 @@ public class ObjMap extends Obj
         out_point.y = (int)-map_pos_y;
 
         return out_point;
+    }
+
+    // マップの範囲内チェック
+    // 戻り値 boolean 範囲内ならtrue 範囲外ならfalse
+    public boolean Map_In_A_Range_Check(Point point)
+    {
+        if (point.x < 0) return false;
+        if (point.y < 0) return false;
+        if (point.x >= final_map_width) return false;
+        if (point.y >= final_map_height) return false;
+
+        return true;
     }
 }

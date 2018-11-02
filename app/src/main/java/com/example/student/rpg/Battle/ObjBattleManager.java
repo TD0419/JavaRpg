@@ -2,6 +2,7 @@ package com.example.student.rpg.Battle;
 
 import com.example.student.rpg.Global;
 import com.example.student.rpg.Obj;
+import com.example.student.rpg.ObjMessageWindow;
 import com.example.student.rpg.ObjectManager;
 
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ public class ObjBattleManager extends Obj implements Runnable
         m_battle_enemy = new ObjBattleEnemy();
         object_list.add(m_battle_enemy);
 
-        //Thread thread = new Thread(this);
-        //thread.start();
         m_thread = new Thread(this);
         m_thread.start();
     }
@@ -79,8 +78,8 @@ public class ObjBattleManager extends Obj implements Runnable
 
                         // ダメージを与える
                         enemy_obj_battle.Defense(state.attack);
-                        //m_message_window.SetMsseageText(
-                        //        enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
+                        m_message_window.SetMsseageText(
+                                enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
                         break;
                     }
                 }
@@ -106,7 +105,6 @@ public class ObjBattleManager extends Obj implements Runnable
     // 画面をタッチするまで動かなくする関数
     private void Stop_Touch_Move()
     {
-        boolean a = false;
         while(true)
         {
             // トライキャッチ文を使ってタッチフラグを適当な変数aにいれたら、
@@ -117,15 +115,16 @@ public class ObjBattleManager extends Obj implements Runnable
                 if (Global.touch_push == true)
                 {
                     Global.touch_push = false;
-                    m_message_window.SetMsseageText("画面をタッチしました。");
+                    //m_message_window.SetMsseageText("画面をタッチしました。");
                     break;
-                } else {
-                    m_message_window.SetMsseageText("画面をタッチしてください。");
                 }
+//                else {
+//                    m_message_window.SetMsseageText("画面をタッチしてください。");
+//                }
             }
             catch (RuntimeException run)
             {
-                a = Global.touch_push;
+                ;
             }
         }
     }
@@ -135,16 +134,23 @@ public class ObjBattleManager extends Obj implements Runnable
     {
         while (true)
         {
-            if(m_player_command.m_attack_button.GetTouchButton() == true)
+            try
             {
-                m_player_command.m_attack_button.SetTouchButton(false);
-                m_message_window.SetMsseageText("攻撃ボタンをタッチしました。");
-                break;
+                if (m_player_command.m_attack_button.GetTouchButton() == true)
+                {
+                    m_player_command.m_attack_button.SetTouchButton(false);
+                    //m_message_window.SetMsseageText("攻撃ボタンをタッチしました。");
+                    break;
+                }
             }
-            else
+            catch (RuntimeException run)
             {
-                m_message_window.SetMsseageText("攻撃ボタンをタッチしてください。");
+                ;
             }
+//            else
+//            {
+//                m_message_window.SetMsseageText("攻撃ボタンをタッチしてください。");
+//            }
         }
     }
 }

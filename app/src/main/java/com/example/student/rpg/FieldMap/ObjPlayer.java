@@ -24,7 +24,7 @@ public class ObjPlayer extends Obj
     float m_velocity_x;
     float m_velocity_y;
 
-    final float m_final_speed = 0.005f;
+    final float m_final_speed = 0.04f;
 
     float m_move_amount;
 
@@ -77,8 +77,10 @@ public class ObjPlayer extends Obj
         }
 
         // 移動処理
-        m_x += m_velocity_x;
-        m_y += m_velocity_y;
+        //m_x += m_velocity_x;
+        //m_y += m_velocity_y;
+        // マップをスクロールさせる
+        m_objmap.Map_Move_Scroll(m_velocity_x, m_velocity_y);
 
         m_move_amount += abs(m_velocity_x);
         m_move_amount += abs(m_velocity_y);

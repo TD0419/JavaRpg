@@ -6,12 +6,34 @@ public class ObjBattle extends Obj
 {
     public String m_name;
 
+    // キャラクターの立ち位置
+    public enum Character_Kind
+    {
+        Ally(0), // 味方
+        Enemy(1),// 敵
+        ;
+
+        private int id;
+
+        Character_Kind(final int id)
+        {
+            this.id = id;
+        }
+
+        public int getInt()
+        {
+            return this.id;
+        }
+    }
+
     // ステータス情報
     public class State_Info
     {
         public int hp;
         public int attack;
         public int speed;
+
+        public Character_Kind character_kind;
     }
 
     // 敵に攻撃する際の情報

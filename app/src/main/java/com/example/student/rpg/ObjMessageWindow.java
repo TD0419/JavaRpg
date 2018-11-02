@@ -1,4 +1,4 @@
-package com.example.student.rpg.Battle;
+package com.example.student.rpg;
 
 import com.example.student.rpg.FontTexture;
 import com.example.student.rpg.Global;

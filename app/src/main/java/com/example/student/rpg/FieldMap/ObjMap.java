@@ -1,5 +1,7 @@
 package com.example.student.rpg.FieldMap;
 
+import com.example.student.rpg.FontTexture;
+import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static com.example.student.rpg.MyRenderer.m_messege_window_texture;
 
 public class ObjMap extends Obj
 {
@@ -81,6 +85,13 @@ public class ObjMap extends Obj
                 }
             }
         }
+
+        String string = "x : " + Global.touch_x;
+
+        // 文字表示
+        FontTexture.DrawString(Global.gl, -1.3f, -0.3f, 0.2f, 0.2f, string,
+                1.f, 1.f, 1.f, 1.f);
+
     }
 
     // ファイルからマップデータ取得
@@ -139,8 +150,10 @@ public class ObjMap extends Obj
         search_map[start_point.y][start_point.x] = depth_num;
 
         // 現在の位置が目的についていたら処理終了
-        if(start_point.x == end_point.x &&
-                start_point.y == end_point.y) return;
+        if(start_point.x == end_point.x && start_point.y == end_point.y)
+        {
+            return;
+        }
 
         for(int i = 0; i < 4; i++)
         {
@@ -178,7 +191,7 @@ public class ObjMap extends Obj
 
         // ゴールからスタートに戻るまでの距離
         int distance;
-        distance = search_map[end_point.y][end_point.x];
+        distance = search_map[end_point.y][end_point.x] - 1;
 
         shortest_route.add(new Point(end_point.x, end_point.y));
         now_point = end_point;
@@ -190,16 +203,17 @@ public class ObjMap extends Obj
             next_point.x = now_point.x + direction[i].x;
             next_point.y = now_point.y + direction[i].y;
 
+            // スタート位置に戻ってきたら終了
+            if(distance == 1) break;
+
             // 次に進むべき道を探す
-            if(search_map[next_point.y][next_point.x] == distance - 1)
+            if(search_map[next_point.y][next_point.x] == distance)
             {
                 i = -1; // ループを最初からにする
                 distance--;
                 // 最短ルートに登録
                 shortest_route.add(new Point(next_point.x, next_point.y));
                 now_point = next_point;
-
-                if(distance == 2) break;
             }
         }
 
@@ -212,8 +226,11 @@ public class ObjMap extends Obj
         Point out_point = new Point();
         float map_pos_x, map_pos_y;
         // 計算が見づらい・・・修正案件
+        //map_pos_x = (x - m_x + final_object_size_half) / final_object_size;
+        //map_pos_y = (y - m_y - final_object_size_half) / final_object_size;
         map_pos_x = (x - m_x + final_object_size_half) / final_object_size;
         map_pos_y = (y - m_y - final_object_size_half) / final_object_size;
+        // 0.6 - 0.0f + 0.1 / 0.2
 
         out_point.x = (int) map_pos_x;
         out_point.y = (int)-map_pos_y;
@@ -231,5 +248,12 @@ public class ObjMap extends Obj
         if (point.y >= final_map_height) return false;
 
         return true;
+    }
+
+
+    public void Map_Move_Scroll(float move_x, float move_y)
+    {
+        m_x -= move_x;
+        m_y -= move_y;
     }
 }

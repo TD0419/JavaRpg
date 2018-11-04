@@ -5,14 +5,11 @@ import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
-import com.example.student.rpg.Point;
+import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
-
-import static com.example.student.rpg.MyRenderer.m_messege_window_texture;
 
 public class ObjMap extends Obj
 {
@@ -22,7 +19,6 @@ public class ObjMap extends Obj
     final float final_object_size_half = final_object_size / 2.f;
     final int final_not_search = 99999;
 
-    //Map<Integer, Map<Integer, Integer>> m_map = new LinkedHashMap<Integer, Map<Integer, Integer>>();
     int[][] m_map_data_array =
             {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, },
@@ -102,25 +98,25 @@ public class ObjMap extends Obj
 
     // マップから最短ルートを取得
     // 引数は全てのマップの要素数にする
-    public ArrayList<Point> Shortest_Route(Point start_point, Point end_point)
+    public ArrayList<Point_Int> Shortest_Route(Point_Int start_pointInt, Point_Int end_pointInt)
     {
         // スタートとゴールの場所がマップの範囲内じゃなければ、処理を終了させる
-        if (Map_In_A_Range_Check(start_point) == false ||
-                Map_In_A_Range_Check(end_point)   == false)
+        if (Map_In_A_Range_Check(start_pointInt) == false ||
+                Map_In_A_Range_Check(end_pointInt)   == false)
         {
             return null;
         }
 
         // スタートまたはゴールが通れない位置にある場合は、処理を終了させる
-        if (m_map_data_array[start_point.y][start_point.x] == Map_Kind.Impassable.getInt() ||
-                m_map_data_array[end_point.y][end_point.x] == Map_Kind.Impassable.getInt())
+        if (m_map_data_array[start_pointInt.y][start_pointInt.x] == Map_Kind.Impassable.getInt() ||
+                m_map_data_array[end_pointInt.y][end_pointInt.x] == Map_Kind.Impassable.getInt())
         {
             return null;
         }
 
         // 現在の位置が目的地についていたら処理終了させる
-        if (start_point.x == end_point.x &&
-                start_point.y == end_point.y)
+        if (start_pointInt.x == end_pointInt.x &&
+                start_pointInt.y == end_pointInt.y)
         {
             return null;
         }
@@ -135,22 +131,22 @@ public class ObjMap extends Obj
             }
         }
 
-        Route_Search(search_map, start_point, end_point, 0);
+        Route_Search(search_map, start_pointInt, end_pointInt, 0);
 
         // 最短ルート取得
-        return Route_Get(search_map, end_point);
+        return Route_Get(search_map, end_pointInt);
     }
 
-    void Route_Search(int[][] search_map, Point start_point,
-                      Point end_point, int depth_num)
+    void Route_Search(int[][] search_map, Point_Int start_pointInt,
+                      Point_Int end_pointInt, int depth_num)
     {
         // 調べる方向                               上                        左                         下                        右
-        final Point direction[] = { new Point(0, -1), new Point(-1, 0), new Point(0, 1), new Point(1, 0) };
+        final Point_Int direction[] = { new Point_Int(0, -1), new Point_Int(-1, 0), new Point_Int(0, 1), new Point_Int(1, 0) };
         depth_num++;
-        search_map[start_point.y][start_point.x] = depth_num;
+        search_map[start_pointInt.y][start_pointInt.x] = depth_num;
 
         // 現在の位置が目的についていたら処理終了
-        if(start_point.x == end_point.x && start_point.y == end_point.y)
+        if(start_pointInt.x == end_pointInt.x && start_pointInt.y == end_pointInt.y)
         {
             return;
         }
@@ -158,62 +154,62 @@ public class ObjMap extends Obj
         for(int i = 0; i < 4; i++)
         {
             // 次に調べる位置
-            Point next_point = new Point();
-            next_point.x = start_point.x + direction[i].x;
-            next_point.y = start_point.y + direction[i].y;
+            Point_Int next_pointInt = new Point_Int();
+            next_pointInt.x = start_pointInt.x + direction[i].x;
+            next_pointInt.y = start_pointInt.y + direction[i].y;
 
             // 範囲内外なら違う道を探す
-            if (Map_In_A_Range_Check(next_point) == false) continue;
+            if (Map_In_A_Range_Check(next_pointInt) == false) continue;
 
             // 通行可能かどうか
-            if(m_map_data_array[next_point.y][next_point.x] == Map_Kind.Impassable.getInt()) continue;
+            if(m_map_data_array[next_pointInt.y][next_pointInt.x] == Map_Kind.Impassable.getInt()) continue;
 
             // その次の先を調べるかどうか
-            if(search_map[next_point.y][next_point.x] > depth_num)
+            if(search_map[next_pointInt.y][next_pointInt.x] > depth_num)
             {
-                Route_Search(search_map, next_point, end_point, depth_num);
+                Route_Search(search_map, next_pointInt, end_pointInt, depth_num);
             }
         }
     }
 
     // 最短ルート取得(検索配列を使って、ゴールの位置から調べる)
-    private ArrayList<Point> Route_Get(int search_map[][], Point end_point)
+    private ArrayList<Point_Int> Route_Get(int search_map[][], Point_Int end_pointInt)
     {
         // 調べる方向            上       左      下      右
-        final Point direction[] = { new Point(0, -1), new Point(-1, 0),
-                new Point(0, 1), new Point(1, 0) };
+        final Point_Int direction[] = { new Point_Int(0, -1), new Point_Int(-1, 0),
+                new Point_Int(0, 1), new Point_Int(1, 0) };
 
         // 現在地
-        Point now_point = new Point();
+        Point_Int now_pointInt = new Point_Int();
 
         // 最短ルートを入れる配列
-        ArrayList<Point> shortest_route = new ArrayList<Point>();
+        ArrayList<Point_Int> shortest_route = new ArrayList<Point_Int>();
 
         // ゴールからスタートに戻るまでの距離
         int distance;
-        distance = search_map[end_point.y][end_point.x] - 1;
+        distance = search_map[end_pointInt.y][end_pointInt.x] - 1;
 
-        shortest_route.add(new Point(end_point.x, end_point.y));
-        now_point = end_point;
+        shortest_route.add(new Point_Int(end_pointInt.x, end_pointInt.y));
+        now_pointInt = end_pointInt;
 
         for(int i = 0; i < 4; i++)
         {
             // 次の調べる位置
-            Point next_point = new Point();
-            next_point.x = now_point.x + direction[i].x;
-            next_point.y = now_point.y + direction[i].y;
+            Point_Int next_pointInt = new Point_Int();
+            next_pointInt.x = now_pointInt.x + direction[i].x;
+            next_pointInt.y = now_pointInt.y + direction[i].y;
 
             // スタート位置に戻ってきたら終了
             if(distance == 1) break;
 
             // 次に進むべき道を探す
-            if(search_map[next_point.y][next_point.x] == distance)
+            if(search_map[next_pointInt.y][next_pointInt.x] == distance)
             {
                 i = -1; // ループを最初からにする
                 distance--;
                 // 最短ルートに登録
-                shortest_route.add(new Point(next_point.x, next_point.y));
-                now_point = next_point;
+                shortest_route.add(new Point_Int(next_pointInt.x, next_pointInt.y));
+                now_pointInt = next_pointInt;
             }
         }
 
@@ -221,36 +217,35 @@ public class ObjMap extends Obj
     }
 
     // 位置をマップの配列の要素に変換
-    public Point PosConvertMapPos(float x, float y)
+    public Point_Int PosConvertMapPos(float x, float y)
     {
-        Point out_point = new Point();
+        Point_Int out_pointInt = new Point_Int(); // 戻り値
         float map_pos_x, map_pos_y;
-        // 計算が見づらい・・・修正案件
-        //map_pos_x = (x - m_x + final_object_size_half) / final_object_size;
-        //map_pos_y = (y - m_y - final_object_size_half) / final_object_size;
-        map_pos_x = (x - m_x + final_object_size_half) / final_object_size;
-        map_pos_y = (y - m_y - final_object_size_half) / final_object_size;
-        // 0.6 - 0.0f + 0.1 / 0.2
 
-        out_point.x = (int) map_pos_x;
-        out_point.y = (int)-map_pos_y;
+        map_pos_x = +(x - m_x + final_object_size_half) / final_object_size;
+        map_pos_y = -(y - m_y - final_object_size_half) / final_object_size;
 
-        return out_point;
+        out_pointInt.x = (int)map_pos_x;
+        out_pointInt.y = (int)map_pos_y;
+
+        return out_pointInt;
     }
 
     // マップの範囲内チェック
     // 戻り値 boolean 範囲内ならtrue 範囲外ならfalse
-    public boolean Map_In_A_Range_Check(Point point)
+    public boolean Map_In_A_Range_Check(Point_Int pointInt)
     {
-        if (point.x < 0) return false;
-        if (point.y < 0) return false;
-        if (point.x >= final_map_width) return false;
-        if (point.y >= final_map_height) return false;
+        if (pointInt.x < 0) return false;
+        if (pointInt.y < 0) return false;
+        if (pointInt.x >= final_map_width) return false;
+        if (pointInt.y >= final_map_height) return false;
 
         return true;
     }
 
-
+    // マップをスクロールで移動させる関数
+    // 引数1 move_x キャラクターの移動量X
+    // 引数2 move_y キャラクターの移動量Y
     public void Map_Move_Scroll(float move_x, float move_y)
     {
         m_x -= move_x;

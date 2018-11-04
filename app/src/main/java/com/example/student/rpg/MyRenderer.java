@@ -11,6 +11,7 @@ import com.example.student.rpg.Battle.ObjBattleEnemy;
 import com.example.student.rpg.Battle.ObjPlayerCommand;
 import com.example.student.rpg.FieldMap.ObjMap;
 import com.example.student.rpg.FieldMap.ObjPlayer;
+import com.example.student.rpg.Scene.SceneManager;
 import com.example.student.rpg.Title.ObjBackGround;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -39,21 +40,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public MyRenderer(Context context)
     {
         Global.context = context;
-
-//        m_battle_manager = new ObjBattleManager();
-//        ObjectManager.Insert(m_battle_manager);
-
-//        m_battle_player = new ObjBattlePlayer();
-//        ObjectManager.Insert(m_battle_player);
-//        m_battle_enemy = new ObjBattleEnemy();
-//        ObjectManager.Insert(m_battle_enemy);
-
-//        m_title_background = new ObjBackGround(0.f, 0.f);
-//        ObjectManager.Insert(m_title_background);
-
-//        m_touch_button = new ObjTouchButton();
-//        ObjectManager.Insert(m_touch_button);
-
     }
 
     private void renderMain(GL10 gl)
@@ -122,14 +108,16 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
         if(Global.is_object_create == true)
         {
+            SceneManager.ChangeScene(SceneManager.Scene_Kind.Title);
+
 //            m_battle_manager = new ObjBattleManager();
 //            ObjectManager.Insert(m_battle_manager);
 
-            m_map = new ObjMap();
-            ObjectManager.Insert(m_map);
-
-            m_player = new ObjPlayer(0.2f, -0.2f, m_map);
-            ObjectManager.Insert(m_player);
+//            m_map = new ObjMap();
+//            ObjectManager.Insert(m_map);
+//
+//            m_player = new ObjPlayer(0.2f, -0.2f, m_map);
+//            ObjectManager.Insert(m_player);
 
             Global.is_object_create = false;
         }

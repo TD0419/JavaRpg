@@ -47,6 +47,11 @@ public class FontTexture
        }
     }
 
+    public static final void DrawString(GL10 gl, float x, float y, float width, float height, String text)
+    {
+        DrawString(gl, x, y, width, height, text, 1.f, 1.f, 1.f, 1.f);
+    }
+
     // マップ情報をクリアする関数(glとcontextが更新されたときに使う)
     public static final void MapClear()
     {

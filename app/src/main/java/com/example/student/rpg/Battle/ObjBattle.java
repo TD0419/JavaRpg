@@ -43,8 +43,7 @@ public class ObjBattle extends Obj
     }
 
     public String GetName() { return m_name; }
-
-    public Attack_info Attack() { return m_attack_info; }
+    public Attack_info GetAttack() { return m_attack_info; }
 
     public void Defense(int attack)
     {

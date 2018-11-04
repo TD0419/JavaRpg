@@ -5,10 +5,9 @@ import com.example.student.rpg.GraphicUtil.Rect;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
-import com.example.student.rpg.Point;
+import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -19,7 +18,7 @@ public class ObjPlayer extends Obj
     Rect m_rect = new Rect();
     ObjMap m_objmap;
 
-    ArrayList<Point> m_root;
+    ArrayList<Point_Int> m_root;
 
     float m_velocity_x;
     float m_velocity_y;
@@ -51,15 +50,15 @@ public class ObjPlayer extends Obj
     public void Update()
     {
         // プレイヤーの現在地をマップ位置に変換
-        Point player_map_point = m_objmap.PosConvertMapPos(m_x, m_y);
+        Point_Int player_map_pointInt = m_objmap.PosConvertMapPos(m_x, m_y);
 
         if(Global.touch_push == true && m_move_amount == 0.f)
         {
             // タッチした位置をマップ位置に変換
-            Point touch_map_point = m_objmap.PosConvertMapPos(Global.touch_x, Global.touch_y);
+            Point_Int touch_map_pointInt = m_objmap.PosConvertMapPos(Global.touch_x, Global.touch_y);
 
             // 最短ルート取得
-            m_root = m_objmap.Shortest_Route(player_map_point, touch_map_point);
+            m_root = m_objmap.Shortest_Route(player_map_pointInt, touch_map_pointInt);
 
             Global.touch_push = false;
         }
@@ -69,11 +68,11 @@ public class ObjPlayer extends Obj
                 && m_move_amount == 0.f)
         {
             // 今の位置と後ろデータを使って次の進む位置を調べる
-            Point next_point = m_root.get(m_root.size() - 1);
+            Point_Int next_pointInt = m_root.get(m_root.size() - 1);
 
             // 進む向きを入れて主人公を動かす
-            m_velocity_x = +(float)(next_point.x - player_map_point.x) * m_final_speed;
-            m_velocity_y = -(float)(next_point.y - player_map_point.y) * m_final_speed;
+            m_velocity_x = +(float)(next_pointInt.x - player_map_pointInt.x) * m_final_speed;
+            m_velocity_y = -(float)(next_pointInt.y - player_map_pointInt.y) * m_final_speed;
         }
 
         // 移動処理

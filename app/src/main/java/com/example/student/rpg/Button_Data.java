@@ -6,6 +6,7 @@ public class Button_Data
     public float y;
     public boolean touch = false;
 
+
     public Button_Data(float pos_x, float pos_y)
     {
         x = pos_x;

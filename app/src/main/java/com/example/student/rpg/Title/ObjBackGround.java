@@ -7,6 +7,7 @@ import com.example.student.rpg.Obj;
 
 import javax.microedition.khronos.opengles.GL10;
 
+// タイトルの背景画面
 public class ObjBackGround extends Obj
 {
     int m_map_pos_x;

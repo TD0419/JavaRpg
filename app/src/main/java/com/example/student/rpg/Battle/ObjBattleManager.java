@@ -62,7 +62,7 @@ public class ObjBattleManager extends Obj implements Runnable
             for (Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext(); )
             {
                 ObjBattle obj_battle = itr.next();
-                ObjBattle.Attack_info attack = obj_battle.Attack();
+                ObjBattle.Attack_info attack = obj_battle.GetAttack();
                 ObjBattle.State_Info state = obj_battle.GetState();
 
                 int count = 0;
@@ -118,9 +118,6 @@ public class ObjBattleManager extends Obj implements Runnable
                     //m_message_window.SetMsseageText("画面をタッチしました。");
                     break;
                 }
-//                else {
-//                    m_message_window.SetMsseageText("画面をタッチしてください。");
-//                }
             }
             catch (RuntimeException run)
             {
@@ -147,10 +144,6 @@ public class ObjBattleManager extends Obj implements Runnable
             {
                 ;
             }
-//            else
-//            {
-//                m_message_window.SetMsseageText("攻撃ボタンをタッチしてください。");
-//            }
         }
     }
 }

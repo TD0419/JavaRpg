@@ -1,10 +1,14 @@
 package com.example.student.rpg.FieldMap;
 
+import android.icu.text.SymbolTable;
+
 import com.example.student.rpg.FontTexture;
 import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
+import com.example.student.rpg.ObjectManager;
+import com.example.student.rpg.Point_Float;
 import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;
@@ -22,7 +26,7 @@ public class ObjMap extends Obj
     int[][] m_map_data_array =
             {
                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, },
-                    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
+                    { 1, 0, 0, 0, 2, 0, 0, 0, 0, 1, },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
@@ -35,9 +39,9 @@ public class ObjMap extends Obj
 
     public enum Map_Kind
     {
-        None(0),
-        Impassable(1),
-        // マップ遷移
+        None(0),       // 何もない通れる道
+        Impassable(1), // 通れない道
+        SymbolEnemy(2),// 敵シンボル
         ;
 
         private int id;
@@ -56,15 +60,20 @@ public class ObjMap extends Obj
     public ObjMap()
     {
         // マップ情報を初期化
-//        for(int y = 0; y < final_map_height; y++)
-//        {
-//            Map<Integer, Integer> tempMap = new LinkedHashMap<Integer, Integer>();
-//            for(int x = 0; x < final_map_width; x++)
-//            {
-//                tempMap.put(x,0);
-//            }
-//            m_map.put(y, tempMap);
-//        }
+        for(int y = 0; y < final_map_height; y++)
+        {
+            for(int x = 0; x < final_map_width; x++)
+            {
+                // 敵シンボルがあれば、敵を生成
+                if(m_map_data_array[y][x] == Map_Kind.SymbolEnemy.getInt())
+                {
+                    // マップの位置からOpenGl座標に変換
+                    ObjSymbolEnemy obj_symbol_enemy = new ObjSymbolEnemy(
+                            x * final_object_size, -(y * final_object_size),this);
+                    ObjectManager.Insert(obj_symbol_enemy);
+                }
+            }
+        }
     }
 
     @Override
@@ -81,13 +90,6 @@ public class ObjMap extends Obj
                 }
             }
         }
-
-        String string = "x : " + Global.touch_x;
-
-        // 文字表示
-        FontTexture.DrawString(Global.gl, -1.3f, -0.3f, 0.2f, 0.2f, string,
-                1.f, 1.f, 1.f, 1.f);
-
     }
 
     // ファイルからマップデータ取得
@@ -98,6 +100,8 @@ public class ObjMap extends Obj
 
     // マップから最短ルートを取得
     // 引数は全てのマップの要素数にする
+    // 引数1 Point_Int : 探索のスタート座標
+    // 引数2 Point_int : 探索のゴール座標
     public ArrayList<Point_Int> Shortest_Route(Point_Int start_pointInt, Point_Int end_pointInt)
     {
         // スタートとゴールの場所がマップの範囲内じゃなければ、処理を終了させる
@@ -110,6 +114,13 @@ public class ObjMap extends Obj
         // スタートまたはゴールが通れない位置にある場合は、処理を終了させる
         if (m_map_data_array[start_pointInt.y][start_pointInt.x] == Map_Kind.Impassable.getInt() ||
                 m_map_data_array[end_pointInt.y][end_pointInt.x] == Map_Kind.Impassable.getInt())
+        {
+            return null;
+        }
+
+        // スタートまたはゴールが通れない位置にある場合は、処理を終了させる
+        if (m_map_data_array[start_pointInt.y][start_pointInt.x] == Map_Kind.SymbolEnemy.getInt() ||
+                m_map_data_array[end_pointInt.y][end_pointInt.x] == Map_Kind.SymbolEnemy.getInt())
         {
             return null;
         }
@@ -137,6 +148,7 @@ public class ObjMap extends Obj
         return Route_Get(search_map, end_pointInt);
     }
 
+    // ルート検索(再帰関数)
     void Route_Search(int[][] search_map, Point_Int start_pointInt,
                       Point_Int end_pointInt, int depth_num)
     {
@@ -163,6 +175,7 @@ public class ObjMap extends Obj
 
             // 通行可能かどうか
             if(m_map_data_array[next_pointInt.y][next_pointInt.x] == Map_Kind.Impassable.getInt()) continue;
+            if(m_map_data_array[next_pointInt.y][next_pointInt.x] == Map_Kind.SymbolEnemy.getInt()) continue;
 
             // その次の先を調べるかどうか
             if(search_map[next_pointInt.y][next_pointInt.x] > depth_num)
@@ -216,7 +229,7 @@ public class ObjMap extends Obj
         return shortest_route;
     }
 
-    // 位置をマップの配列の要素に変換
+    // OpenGL上の位置をマップの配列の要素に変換
     public Point_Int PosConvertMapPos(float x, float y)
     {
         Point_Int out_pointInt = new Point_Int(); // 戻り値
@@ -250,5 +263,11 @@ public class ObjMap extends Obj
     {
         m_x -= move_x;
         m_y -= move_y;
+    }
+
+    // マップ位置の要素を返す関数
+    public int Get_Map_Element(Point_Int point)
+    {
+        return m_map_data_array[point.y][point.x];
     }
 }

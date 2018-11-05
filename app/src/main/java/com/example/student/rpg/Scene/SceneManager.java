@@ -1,5 +1,7 @@
 package com.example.student.rpg.Scene;
 
+import com.example.student.rpg.ObjectManager;
+
 // シーンを管理するクラス
 public class SceneManager
 {
@@ -18,7 +20,13 @@ public class SceneManager
         switch (next_scene_kind)
         {
             case Title:
+                ObjectManager.ObjectClear(); // 現在のオブジェクトをすべて削除
                 now_scene = new SceneTitle();
+                break;
+
+            case Game:
+                ObjectManager.ObjectClear();  // 現在のオブジェクトをすべて削除
+                now_scene = new SceneGame();
                 break;
         }
     }

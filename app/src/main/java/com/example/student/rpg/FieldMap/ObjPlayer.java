@@ -1,5 +1,6 @@
 package com.example.student.rpg.FieldMap;
 
+import com.example.student.rpg.Battle.ObjBattleManager;
 import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil.Rect;
 import com.example.student.rpg.GraphicUtil;
@@ -15,17 +16,17 @@ import static java.lang.Math.abs;
 
 public class ObjPlayer extends Obj
 {
-    Rect m_rect = new Rect();
+    Rect m_rect = new Rect(); // 画像の切り取り位置
     ObjMap m_objmap;
 
     ArrayList<Point_Int> m_root;
 
-    float m_velocity_x;
+    float m_velocity_x; // 移動ベクトル
     float m_velocity_y;
 
-    final float m_final_speed = 0.04f;
+    final float m_final_speed = 0.05f; // 移動速度
 
-    float m_move_amount;
+    float m_move_amount; // 移動量(1マス進んだかの確認用)
 
     public ObjPlayer(float x, float y, ObjMap objmap)
     {
@@ -60,6 +61,21 @@ public class ObjPlayer extends Obj
             // 最短ルート取得
             m_root = m_objmap.Shortest_Route(player_map_pointInt, touch_map_pointInt);
 
+            // 敵シンボルをタッチしていたら
+            if(m_objmap.Get_Map_Element(touch_map_pointInt) == ObjMap.Map_Kind.SymbolEnemy.getInt())
+            {
+                // 敵シンボルの隣にいたら、敵の特有のイベントを起こす
+                int distance = 0;
+                distance += abs(player_map_pointInt.x - touch_map_pointInt.x);
+                distance += abs(player_map_pointInt.y - touch_map_pointInt.y);
+
+                if(distance == 1)
+                {
+                    // 戦闘シーンへ
+
+                }
+            }
+
             Global.touch_push = false;
         }
 
@@ -75,14 +91,15 @@ public class ObjPlayer extends Obj
             m_velocity_y = -(float)(next_pointInt.y - player_map_pointInt.y) * m_final_speed;
         }
 
+        // 移動量を記録(1マス進んだかを判定するため)
+        m_move_amount += abs(m_velocity_x);
+        m_move_amount += abs(m_velocity_y);
+
         // 移動処理
         //m_x += m_velocity_x;
         //m_y += m_velocity_y;
-        // マップをスクロールさせる
+        // マップをスクロールさせる(主人公を動かさずに、スクロールによって動いているように見せる)
         m_objmap.Map_Move_Scroll(m_velocity_x, m_velocity_y);
-
-        m_move_amount += abs(m_velocity_x);
-        m_move_amount += abs(m_velocity_y);
 
         // 移動し終わったら、リストから後ろのデータを削除
         if(m_move_amount >= ObjMap.final_object_size)

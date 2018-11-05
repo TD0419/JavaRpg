@@ -8,12 +8,12 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ObjectManager
 {
-    private static ArrayList<Obj> object_list = new ArrayList<Obj>();
+    private static ArrayList<Obj> m_object_list = new ArrayList<Obj>();
 
     // オブジェクト更新
     public static void Update()
     {
-        for(Iterator<Obj>itr = object_list.iterator(); itr.hasNext();)
+        for(Iterator<Obj>itr = m_object_list.iterator(); itr.hasNext();)
         {
             Obj obj = itr.next();
 
@@ -29,7 +29,7 @@ public class ObjectManager
     // オブジェクト表示
     public static void Draw(GL10 gl)
     {
-        for(Iterator<Obj>itr = object_list.iterator(); itr.hasNext();)
+        for(Iterator<Obj>itr = m_object_list.iterator(); itr.hasNext();)
         {
             itr.next().Draw(gl);
         }
@@ -38,7 +38,7 @@ public class ObjectManager
     // オブジェクト追加
     public static void Insert(Obj obj)
     {
-        object_list.add(obj);
+        m_object_list.add(obj);
     }
 
     // オブジェクトデータ取得
@@ -46,7 +46,7 @@ public class ObjectManager
     {
         ArrayList<Obj> out_list = new ArrayList<>();
 
-        for(Iterator<Obj>itr = object_list.iterator(); itr.hasNext();)
+        for(Iterator<Obj>itr = m_object_list.iterator(); itr.hasNext();)
         {
             Obj object = itr.next();
             if(object.getClass() == class_data)
@@ -56,5 +56,11 @@ public class ObjectManager
         }
 
         return out_list;
+    }
+
+    // リスト内にあるオブジェクトをすべて削除
+    public static void ObjectClear()
+    {
+        m_object_list.clear();
     }
 }

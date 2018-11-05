@@ -9,10 +9,8 @@ import com.example.student.rpg.Battle.ObjBattleManager;
 import com.example.student.rpg.Battle.ObjBattlePlayer;
 import com.example.student.rpg.Battle.ObjBattleEnemy;
 import com.example.student.rpg.Battle.ObjPlayerCommand;
-import com.example.student.rpg.FieldMap.ObjMap;
-import com.example.student.rpg.FieldMap.ObjPlayer;
 import com.example.student.rpg.Scene.SceneManager;
-import com.example.student.rpg.Title.ObjBackGround;
+
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -32,11 +30,6 @@ public class MyRenderer implements GLSurfaceView.Renderer
     private ObjBattleEnemy m_battle_enemy;
     private ObjPlayerCommand m_player_command;
 
-    private ObjBackGround m_title_background;
-    private ObjPlayer m_player;
-    private ObjMap m_map;
-    private ObjTouchButton m_touch_button;
-
     public MyRenderer(Context context)
     {
         Global.context = context;
@@ -49,6 +42,18 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
         ObjectManager.Update();
         ObjectManager.Draw(gl);
+
+        int fps = FpsManager.FpsMeasurement(); // fpsを計測
+        if(fps >= 30)// 30fps以上なら緑
+        {
+            FontTexture.DrawString(gl, -1.f, -0.8f, 0.1f, 0.1f, "fps : " + String.valueOf(fps),
+                    0.f, 1.f, 0.f, 1.f);
+        }
+        else // それ以下なら赤
+        {
+            FontTexture.DrawString(gl, -1.f, -0.8f, 0.1f, 0.1f, "fps : " + String.valueOf(fps),
+                    1.f, 0.f, 0.f, 1.f);
+        }
 
         gl.glDisable(GL10.GL_BLEND);
     }
@@ -95,7 +100,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
         gl.glViewport(w_offset, h_offset, w, h);
 
         m_player_texture       = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.hero);
-        //m_title_back_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.title_back_ground);
+        m_title_back_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.title_back_ground);
         m_attack_select_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.attack_select);
         m_messege_window_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.box_red);
         m_block_texture          = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.normalice_block);
@@ -108,16 +113,11 @@ public class MyRenderer implements GLSurfaceView.Renderer
 
         if(Global.is_object_create == true)
         {
+            // 最初のシーンをタイトルに設定
             SceneManager.ChangeScene(SceneManager.Scene_Kind.Title);
 
 //            m_battle_manager = new ObjBattleManager();
 //            ObjectManager.Insert(m_battle_manager);
-
-//            m_map = new ObjMap();
-//            ObjectManager.Insert(m_map);
-//
-//            m_player = new ObjPlayer(0.2f, -0.2f, m_map);
-//            ObjectManager.Insert(m_player);
 
             Global.is_object_create = false;
         }

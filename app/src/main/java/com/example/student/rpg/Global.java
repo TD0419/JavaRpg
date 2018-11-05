@@ -24,4 +24,7 @@ public class Global
 
     public static boolean touch_push = false; // 画面を押した瞬間
     public static boolean touch_leave = false;// 画面を押しているとき
+
+    // デバッグモードであるか
+    public static boolean is_debug_gable;
 }

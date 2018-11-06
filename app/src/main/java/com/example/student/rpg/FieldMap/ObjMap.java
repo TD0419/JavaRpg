@@ -1,14 +1,9 @@
 package com.example.student.rpg.FieldMap;
 
-import android.icu.text.SymbolTable;
-
-import com.example.student.rpg.FontTexture;
-import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
 import com.example.student.rpg.ObjectManager;
-import com.example.student.rpg.Point_Float;
 import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;

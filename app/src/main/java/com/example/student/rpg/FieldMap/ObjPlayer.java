@@ -6,6 +6,7 @@ import com.example.student.rpg.GraphicUtil.Rect;
 import com.example.student.rpg.GraphicUtil;
 import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
+import com.example.student.rpg.ObjectManager;
 import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;
@@ -72,7 +73,8 @@ public class ObjPlayer extends Obj
                 if(distance == 1)
                 {
                     // 戦闘シーンへ
-
+                    ObjBattleManager obj_battle_manager = new ObjBattleManager();
+                    ObjectManager.Insert(obj_battle_manager);
                 }
             }
 

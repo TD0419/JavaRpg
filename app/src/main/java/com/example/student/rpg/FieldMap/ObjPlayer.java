@@ -1,5 +1,7 @@
 package com.example.student.rpg.FieldMap;
 
+import com.example.student.rpg.Battle.BattleStateInfo;
+import com.example.student.rpg.Battle.ObjBattle;
 import com.example.student.rpg.Battle.ObjBattleManager;
 import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil.Rect;
@@ -10,6 +12,7 @@ import com.example.student.rpg.ObjectManager;
 import com.example.student.rpg.Point_Int;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -29,6 +32,9 @@ public class ObjPlayer extends Obj
 
     float m_move_amount; // 移動量(1マス進んだかの確認用)
 
+    // ステータス情報
+    BattleStateInfo battle_state_info = new BattleStateInfo();
+
     public ObjPlayer(float x, float y, ObjMap objmap)
     {
         m_x = x;
@@ -46,6 +52,10 @@ public class ObjPlayer extends Obj
         m_rect.bottom = 1.f / 4.f;
 
         m_objmap = objmap;
+
+        battle_state_info.attack = 10;
+        battle_state_info.hp = 100;
+        battle_state_info.speed = 10;
     }
 
     @Override
@@ -72,6 +82,16 @@ public class ObjPlayer extends Obj
 
                 if(distance == 1)
                 {
+                    // 戦闘
+                    ArrayList obj_list = ObjectManager.GetObjectListCopy();
+
+                    for(Iterator<Obj> itr = obj_list.iterator(); itr.hasNext();)
+                    {
+                        Obj object = itr.next();
+                        object.SetObjState(Obj_State.No_Update); // 更新関数を止める
+                        object.SetObjState(Obj_State.No_Draw);   // 描画関数を止める
+                    }
+
                     // 戦闘シーンへ
                     ObjBattleManager obj_battle_manager = new ObjBattleManager();
                     ObjectManager.Insert(obj_battle_manager);

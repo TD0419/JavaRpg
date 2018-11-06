@@ -50,7 +50,7 @@ public class ObjBattleManager extends Obj implements Runnable
 
         while(true)
         {
-            m_message_window.SetMsseageText("どうする？");
+            m_message_window.SetMsseageText("どうする？ ▽");
 
             // 戦闘コマンドを押すまで処理を止める
             Stop_Attack_Move();
@@ -59,30 +59,31 @@ public class ObjBattleManager extends Obj implements Runnable
             m_player_command.SetLookAt(false);
 
             // 行動
-            for (Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext(); )
+            for (Iterator<ObjBattle> itr_attack = object_list.iterator(); itr_attack.hasNext(); )
             {
-                ObjBattle obj_battle = itr.next();
+                ObjBattle obj_battle = itr_attack.next();
                 ObjBattle.Attack_info attack = obj_battle.GetAttack();
-                ObjBattle.State_Info state = obj_battle.GetState();
+                BattleStateInfo state_info = obj_battle.GetState();
 
                 int count = 0;
 
-                for (Iterator<ObjBattle> itr2 = object_list.iterator(); itr2.hasNext(); )
+                for (Iterator<ObjBattle> itr_defence = object_list.iterator(); itr_defence.hasNext(); )
                 {
                     count++;
-                    ObjBattle enemy_obj_battle = itr2.next();
+                    ObjBattle enemy_obj_battle = itr_defence.next();
 
                     if (count == attack.enemy_number)
                     {
-                        // 計算式
-
                         // ダメージを与える
-                        enemy_obj_battle.Defense(state.attack);
+                        enemy_obj_battle.Defense(state_info.attack);
                         m_message_window.SetMsseageText(
-                                enemy_obj_battle.m_name + "は" + state.attack + "のダメージを受けた");
+                                enemy_obj_battle.m_name + "は" + state_info.attack + "のダメージを受けた ▽");
                         break;
                     }
                 }
+
+                // 戦闘終了判定
+                //if()
 
                 // 画面をタッチするまで処理を止める
                 Stop_Touch_Move();
@@ -115,14 +116,10 @@ public class ObjBattleManager extends Obj implements Runnable
                 if (Global.touch_push == true)
                 {
                     Global.touch_push = false;
-                    //m_message_window.SetMsseageText("画面をタッチしました。");
                     break;
                 }
             }
-            catch (RuntimeException run)
-            {
-                ;
-            }
+            catch (RuntimeException run) { ; }
         }
     }
 
@@ -136,14 +133,13 @@ public class ObjBattleManager extends Obj implements Runnable
                 if (m_player_command.m_attack_button.GetTouchButton() == true)
                 {
                     m_player_command.m_attack_button.SetTouchButton(false);
-                    //m_message_window.SetMsseageText("攻撃ボタンをタッチしました。");
                     break;
                 }
             }
-            catch (RuntimeException run)
-            {
-                ;
-            }
+            catch (RuntimeException run) { ; }
         }
     }
+
+    // 戦闘が終わったかどうかを調べる関数
+    
 }

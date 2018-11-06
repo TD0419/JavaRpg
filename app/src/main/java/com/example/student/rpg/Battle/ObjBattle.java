@@ -26,16 +26,6 @@ public class ObjBattle extends Obj
         }
     }
 
-    // ステータス情報
-    public class State_Info
-    {
-        public int hp;
-        public int attack;
-        public int speed;
-
-        public Character_Kind character_kind;
-    }
-
     // 敵に攻撃する際の情報
     public class Attack_info
     {
@@ -52,9 +42,9 @@ public class ObjBattle extends Obj
     }
 
     //
-    public State_Info GetState() { return m_state_info; }
+    public BattleStateInfo GetState() { return m_state_info; }
 
     // ステータス情報
-    protected State_Info m_state_info = new State_Info();
+    protected BattleStateInfo m_state_info = new BattleStateInfo();
     protected Attack_info m_attack_info = new Attack_info();
 }

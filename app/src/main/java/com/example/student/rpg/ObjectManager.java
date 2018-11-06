@@ -1,6 +1,5 @@
 package com.example.student.rpg;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -17,21 +16,41 @@ public class ObjectManager
         {
             Obj obj = itr.next();
 
-            if(obj.GetIsDelete() == true)
+            // 削除フラグがたっていれば、リストから削除する
+            if((obj.m_obj_state & Obj.Obj_State.Obj_Delete.getInt()) ==
+                    Obj.Obj_State.Obj_Delete.getInt())
             {
                 itr.remove();
                 continue;
             }
+
+            // Update停止フラグが立っていれば、Updateさせないようにする
+            if((obj.m_obj_state & Obj.Obj_State.No_Update.getInt()) ==
+                    Obj.Obj_State.No_Update.getInt())
+            {
+                continue;
+            }
+
+
             obj.Update();
         }
     }
 
-    // オブジェクト表示
+    // オブジェクト描画
     public static void Draw(GL10 gl)
     {
         for(Iterator<Obj>itr = m_object_list.iterator(); itr.hasNext();)
         {
-            itr.next().Draw(gl);
+            Obj obj = itr.next();
+
+            // Draw停止フラグが立っていれば、Drawさせないようにする
+            if((obj.m_obj_state & Obj.Obj_State.No_Draw.getInt()) ==
+                    Obj.Obj_State.No_Draw.getInt())
+            {
+                continue;
+            }
+
+            obj.Draw(gl);
         }
     }
 
@@ -62,5 +81,18 @@ public class ObjectManager
     public static void ObjectClear()
     {
         m_object_list.clear();
+    }
+
+    // リストの中にあるオブジェクトを全てを取得する関数(ただし、メンバのリストの本体ではなくコピーを渡す)
+    public static ArrayList<Obj> GetObjectListCopy()
+    {
+        ArrayList<Obj> out_list = new ArrayList<>();
+
+        for(Iterator<Obj>itr = m_object_list.iterator(); itr.hasNext();)
+        {
+            out_list.add(itr.next());
+        }
+
+        return out_list;
     }
 }

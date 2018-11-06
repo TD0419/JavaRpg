@@ -31,7 +31,6 @@ public class ObjectManager
                 continue;
             }
 
-
             obj.Update();
         }
     }

@@ -16,7 +16,7 @@ public class ObjBattleManager extends Obj implements Runnable
 {
     private ObjMessageWindow m_message_window;
     private ObjPlayerCommand m_player_command;
-    private static ArrayList<ObjBattle> object_list = new ArrayList<ObjBattle>();
+    private static ArrayList<ObjBattle> m_object_list = new ArrayList<ObjBattle>();
 
     private ObjBattlePlayer m_battle_player;
     private ObjBattleEnemy m_battle_enemy;
@@ -34,10 +34,10 @@ public class ObjBattleManager extends Obj implements Runnable
         ObjectManager.Insert(m_player_command);
 
         m_battle_player = new ObjBattlePlayer();
-        object_list.add(m_battle_player);
+        m_object_list.add(m_battle_player);
 
         m_battle_enemy = new ObjBattleEnemy();
-        object_list.add(m_battle_enemy);
+        m_object_list.add(m_battle_enemy);
 
         m_thread = new Thread(this);
         m_thread.start();
@@ -59,7 +59,7 @@ public class ObjBattleManager extends Obj implements Runnable
             m_player_command.SetLookAt(false);
 
             // 行動
-            for (Iterator<ObjBattle> itr_attack = object_list.iterator(); itr_attack.hasNext(); )
+            for (Iterator<ObjBattle> itr_attack = m_object_list.iterator(); itr_attack.hasNext(); )
             {
                 ObjBattle obj_battle = itr_attack.next();
                 ObjBattle.Attack_info attack = obj_battle.GetAttack();
@@ -67,7 +67,7 @@ public class ObjBattleManager extends Obj implements Runnable
 
                 int count = 0;
 
-                for (Iterator<ObjBattle> itr_defence = object_list.iterator(); itr_defence.hasNext(); )
+                for (Iterator<ObjBattle> itr_defence = m_object_list.iterator(); itr_defence.hasNext(); )
                 {
                     count++;
                     ObjBattle enemy_obj_battle = itr_defence.next();
@@ -78,6 +78,8 @@ public class ObjBattleManager extends Obj implements Runnable
                         enemy_obj_battle.Defense(state_info.attack);
                         m_message_window.SetMsseageText(
                                 enemy_obj_battle.m_name + "は" + state_info.attack + "のダメージを受けた ▽");
+
+
                         break;
                     }
                 }
@@ -97,7 +99,7 @@ public class ObjBattleManager extends Obj implements Runnable
     @Override
     public void Draw(GL10 gl)
     {
-        for(Iterator<ObjBattle> itr = object_list.iterator(); itr.hasNext();)
+        for(Iterator<ObjBattle> itr = m_object_list.iterator(); itr.hasNext();)
         {
             itr.next().Draw(gl);
         }
@@ -141,5 +143,28 @@ public class ObjBattleManager extends Obj implements Runnable
     }
 
     // 戦闘が終わったかどうかを調べる関数
+    private boolean BattleEndCheck()
+    {
+        return false;
+    }
 
+    // フィールドマップに戻す関数
+    private void GoFieldMap()
+    {
+        // メッセージウィンドウ削除
+        m_message_window.SetObjState(Obj_State.Obj_Delete);
+
+        // プレイヤーコマンド削除
+        m_player_command.SetObjState(Obj_State.Obj_Delete);
+
+        for(Iterator<ObjBattle>itr = m_object_list.iterator(); itr.hasNext();)
+        {
+            itr.next().SetObjState(Obj_State.Obj_Delete);
+        }
+
+        // バトルマネージャーも削除
+        SetObjState(Obj_State.Obj_Delete);
+
+        m_thread.interrupt();
+    }
 }

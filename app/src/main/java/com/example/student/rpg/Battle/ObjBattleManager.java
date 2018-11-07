@@ -141,5 +141,5 @@ public class ObjBattleManager extends Obj implements Runnable
     }
 
     // 戦闘が終わったかどうかを調べる関数
-    
+
 }

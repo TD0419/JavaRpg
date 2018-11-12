@@ -17,16 +17,16 @@ public class ObjectManager
             Obj obj = itr.next();
 
             // 削除フラグがたっていれば、リストから削除する
-            if((obj.m_obj_state & Obj.Obj_State.Obj_Delete.getInt()) ==
-                    Obj.Obj_State.Obj_Delete.getInt())
+            if((obj.m_obj_state & Obj.Obj_State.ObjDelete.getInt()) ==
+                    Obj.Obj_State.ObjDelete.getInt())
             {
                 itr.remove();
                 continue;
             }
 
-            // Update停止フラグが立っていれば、Updateさせないようにする
-            if((obj.m_obj_state & Obj.Obj_State.No_Update.getInt()) ==
-                    Obj.Obj_State.No_Update.getInt())
+            // Update停止フラグが立っていれば、更新させないようにする
+            if((obj.m_obj_state & Obj.Obj_State.StopUpdate.getInt()) ==
+                    Obj.Obj_State.StopUpdate.getInt())
             {
                 continue;
             }
@@ -42,9 +42,9 @@ public class ObjectManager
         {
             Obj obj = itr.next();
 
-            // Draw停止フラグが立っていれば、Drawさせないようにする
-            if((obj.m_obj_state & Obj.Obj_State.No_Draw.getInt()) ==
-                    Obj.Obj_State.No_Draw.getInt())
+            // Draw停止フラグが立っていれば、描画させないようにする
+            if((obj.m_obj_state & Obj.Obj_State.StopDraw.getInt()) ==
+                    Obj.Obj_State.StopDraw.getInt())
             {
                 continue;
             }

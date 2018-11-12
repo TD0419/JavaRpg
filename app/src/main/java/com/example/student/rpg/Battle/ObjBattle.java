@@ -42,7 +42,7 @@ public class ObjBattle extends Obj
     }
 
     //
-    public BattleStateInfo GetState() { return m_state_info; }
+    public BattleStateInfo GetBattleState() { return m_state_info; }
 
     // ステータス情報
     protected BattleStateInfo m_state_info = new BattleStateInfo();

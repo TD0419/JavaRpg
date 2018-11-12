@@ -11,22 +11,43 @@ import static com.example.student.rpg.MyRenderer.m_messege_window_texture;
 
 public class ObjMessageWindow extends Obj
 {
-    String m_messeage_text;
+    String m_messeage_text1;
+    String m_messeage_text2;
 
     @Override
     public void Draw(GL10 gl)
     {
         // メッセージウィンドウ表示
-        GraphicUtil.drawTexture(Global.gl,0.f, -0.5f, 3.f,1.f, m_messege_window_texture);
+        GraphicUtil.drawTexture(Global.gl,0.f, -0.5f,
+                3.f,0.8f, m_messege_window_texture);
 
         // 文字表示
-        FontTexture.DrawString(Global.gl, -1.3f, -0.3f, 0.2f, 0.2f, m_messeage_text,
-                1.f, 1.f, 1.f, 1.f);
+        FontTexture.DrawString(Global.gl, -1.3f, -0.3f,
+                0.2f, 0.2f, m_messeage_text1);
+
+        FontTexture.DrawString(Global.gl, -1.3f, -0.6f,
+                0.2f, 0.2f, m_messeage_text2);
     }
 
     // メッセージウィンドウの文字変更
     public void SetMsseageText(String text)
     {
-         m_messeage_text = text;
+        text = "あいうえおかきくけこさしすせそたちつてと";
+        int length = text.length();
+        if(length >= 12)
+        {
+            m_messeage_text1 = text.substring(0, 12);
+            m_messeage_text2 = text.substring(12);
+        }
+        else
+        {
+            m_messeage_text1 = text;
+        }
+    }
+
+    // テキストから文字列を取得
+    public void LoadText(String path)
+    {
+
     }
 }

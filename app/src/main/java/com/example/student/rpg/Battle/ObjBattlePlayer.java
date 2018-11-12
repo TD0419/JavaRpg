@@ -13,6 +13,7 @@ import static android.graphics.Color.WHITE;
 
 public class ObjBattlePlayer extends ObjBattle
 {
+    // 動作確認用のコンストラクタ(後で削除します)
     public ObjBattlePlayer()
     {
         m_name = "主人公";
@@ -21,6 +22,13 @@ public class ObjBattlePlayer extends ObjBattle
         m_state_info.attack = 10;
         m_state_info.speed = 100;
 
+        m_attack_info.enemy_number = 2;
+    }
+
+    public ObjBattlePlayer(BattleStateInfo battle_state_info)
+    {
+        m_name = "主人公";
+        m_state_info = battle_state_info;
         m_attack_info.enemy_number = 2;
     }
 

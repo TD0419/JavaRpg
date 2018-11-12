@@ -1,9 +1,11 @@
 package com.example.student.rpg.Battle;
 
+import com.example.student.rpg.FieldMap.ObjPlayer;
 import com.example.student.rpg.Global;
 import com.example.student.rpg.Obj;
 import com.example.student.rpg.ObjMessageWindow;
 import com.example.student.rpg.ObjectManager;
+import com.example.student.rpg.Title.ObjBackGround;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,15 +19,19 @@ public class ObjBattleManager extends Obj implements Runnable
     private ObjMessageWindow m_message_window;
     private ObjPlayerCommand m_player_command;
     private static ArrayList<ObjBattle> m_object_list = new ArrayList<ObjBattle>();
-
+    private ObjBattleBackGround m_background;
     private ObjBattlePlayer m_battle_player;
     private ObjBattleEnemy m_battle_enemy;
 
     Thread m_thread;
+    boolean m_is_thread_end;
 
-    // 引数にプレイヤーの操作キャラデータと敵キャラデータを指定予定
     public ObjBattleManager()
     {
+        // 背景作成
+        m_background = new ObjBattleBackGround();
+        ObjectManager.Insert(m_background);
+
         // メッセージウィンドウ作成
         m_message_window = new ObjMessageWindow();
         ObjectManager.Insert(m_message_window);
@@ -33,12 +39,21 @@ public class ObjBattleManager extends Obj implements Runnable
         m_player_command = new ObjPlayerCommand();
         ObjectManager.Insert(m_player_command);
 
-        m_battle_player = new ObjBattlePlayer();
+        // 主人公情報を取得
+        ArrayList<Obj> objplayer = ObjectManager.GetClassObjs(ObjPlayer.class);
+        // 主人公情報は一つしかないので、最初のデータだけ取得
+        BattleStateInfo player_battle_state = ((ObjPlayer)objplayer.iterator().next()).GetBattleState();
+        m_battle_player = new ObjBattlePlayer(player_battle_state);
         m_object_list.add(m_battle_player);
+
+//        m_battle_player = new ObjBattlePlayer();
+//        m_object_list.add(m_battle_player);
 
         m_battle_enemy = new ObjBattleEnemy();
         m_object_list.add(m_battle_enemy);
 
+        // 戦闘を管理するマルチスレッドを作成、起動
+        m_is_thread_end = false;
         m_thread = new Thread(this);
         m_thread.start();
     }
@@ -50,7 +65,7 @@ public class ObjBattleManager extends Obj implements Runnable
 
         while(true)
         {
-            m_message_window.SetMsseageText("どうする？ ▽");
+            m_message_window.SetMsseageText("どうする？ ▼");
 
             // 戦闘コマンドを押すまで処理を止める
             Stop_Attack_Move();
@@ -61,39 +76,51 @@ public class ObjBattleManager extends Obj implements Runnable
             // 行動
             for (Iterator<ObjBattle> itr_attack = m_object_list.iterator(); itr_attack.hasNext(); )
             {
+                // 攻撃側
                 ObjBattle obj_battle = itr_attack.next();
                 ObjBattle.Attack_info attack = obj_battle.GetAttack();
-                BattleStateInfo state_info = obj_battle.GetState();
+                BattleStateInfo state_info = obj_battle.GetBattleState();
 
                 int count = 0;
 
                 for (Iterator<ObjBattle> itr_defence = m_object_list.iterator(); itr_defence.hasNext(); )
                 {
+                    // 防御側
                     count++;
-                    ObjBattle enemy_obj_battle = itr_defence.next();
+                    ObjBattle defence_obj_battle = itr_defence.next();
 
                     if (count == attack.enemy_number)
                     {
                         // ダメージを与える
-                        enemy_obj_battle.Defense(state_info.attack);
+                        defence_obj_battle.Defense(state_info.attack);
                         m_message_window.SetMsseageText(
-                                enemy_obj_battle.m_name + "は" + state_info.attack + "のダメージを受けた ▽");
+                                defence_obj_battle.m_name + "は" + state_info.attack + "のダメージを受けた ▼");
 
+                        // 戦闘終了判定(誰かのHPが0以下になったら、戦闘終了)
+                        if(defence_obj_battle.GetBattleState().hp <= 0)
+                        {
+                            m_is_thread_end = true;
+                            GoFieldMap();
+                        }
 
                         break;
                     }
                 }
 
-                // 戦闘終了判定
-                //if()
+                if(m_is_thread_end == true) break; // マルチスレッドを閉じるフラグがたっていれば、
 
                 // 画面をタッチするまで処理を止める
                 Stop_Touch_Move();
             }
 
+            if(m_is_thread_end == true) break; // マルチスレッドを閉じるフラグがたっていれば、
+
             // 戦闘コマンドを復活させる
             m_player_command.SetLookAt(true);
         }
+
+        // バトルマネージャーも削除
+        EnableObjState(Obj_State.ObjDelete);
     }
 
     @Override
@@ -121,7 +148,7 @@ public class ObjBattleManager extends Obj implements Runnable
                     break;
                 }
             }
-            catch (RuntimeException run) { ; }
+            catch (RuntimeException run) { }
         }
     }
 
@@ -138,33 +165,40 @@ public class ObjBattleManager extends Obj implements Runnable
                     break;
                 }
             }
-            catch (RuntimeException run) { ; }
+            catch (RuntimeException run) { }
         }
     }
 
-    // 戦闘が終わったかどうかを調べる関数
-    private boolean BattleEndCheck()
-    {
-        return false;
-    }
-
-    // フィールドマップに戻す関数
+    // フィールドマップシーンに戻す関数
     private void GoFieldMap()
     {
+        // 背景削除
+        m_background.EnableObjState(Obj_State.ObjDelete);
+
         // メッセージウィンドウ削除
-        m_message_window.SetObjState(Obj_State.Obj_Delete);
+        m_message_window.EnableObjState(Obj_State.ObjDelete);
 
         // プレイヤーコマンド削除
-        m_player_command.SetObjState(Obj_State.Obj_Delete);
+        m_player_command.EnableObjState(Obj_State.ObjDelete);
 
-        for(Iterator<ObjBattle>itr = m_object_list.iterator(); itr.hasNext();)
+        // 戦闘するキャラクター情報を全て削除
+        m_object_list.clear();
+
+        // フィールドマップシーンに戻すために、必要なオブジェクトを使えるようにする
+        ArrayList obj_list = ObjectManager.GetObjectListCopy();
+
+        // 主人公のステータスデータをフィールドマップシーンの主人公に返す
+        // 主人公情報を取得
+        ArrayList<Obj> objplayer = ObjectManager.GetClassObjs(ObjPlayer.class);
+        // 主人公情報は一つしかないので、最初のデータだけ取得
+        ((ObjPlayer)objplayer.iterator().next()).SetBattleStateInfo(m_battle_player.GetBattleState());
+
+        for(Iterator<Obj> itr = obj_list.iterator(); itr.hasNext();)
         {
-            itr.next().SetObjState(Obj_State.Obj_Delete);
+            Obj object = itr.next();
+            // Update関数とDraw関数が動くように初期化
+            object.DisableObjState(Obj_State.StopUpdate);
+            object.DisableObjState(Obj_State.StopDraw);
         }
-
-        // バトルマネージャーも削除
-        SetObjState(Obj_State.Obj_Delete);
-
-        m_thread.interrupt();
     }
 }

@@ -23,17 +23,19 @@ public class ObjPlayer extends Obj
     Rect m_rect = new Rect(); // 画像の切り取り位置
     ObjMap m_objmap;
 
-    ArrayList<Point_Int> m_root;
+    ArrayList<Point_Int> m_root; // 移動ルート
 
     float m_velocity_x; // 移動ベクトル
     float m_velocity_y;
-
     final float m_final_speed = 0.05f; // 移動速度
-
     float m_move_amount; // 移動量(1マス進んだかの確認用)
+    float m_direction;   // キャラクターが向いている向き
+    int m_animation_time;
+    int m_animation_count;
+    final int m_final_animation_interval = 5;
 
     // ステータス情報
-    BattleStateInfo battle_state_info = new BattleStateInfo();
+    BattleStateInfo m_battle_state_info = new BattleStateInfo();
 
     public ObjPlayer(float x, float y, ObjMap objmap)
     {
@@ -43,19 +45,25 @@ public class ObjPlayer extends Obj
         m_velocity_x = 0.f;
         m_velocity_y = 0.f;
 
-        // 移動量
+        // 移動量(マス移動が完了したかどうかの判定用なのでそれ以外で使わないようにしてください)
         m_move_amount = 0;
 
-        m_rect.top = 0.f;
-        m_rect.left = 0.f;
-        m_rect.right = 1.f / 4.f;
-        m_rect.bottom = 1.f / 4.f;
+        m_rect.top    = 127.f / 256.f;
+        m_rect.left   = 224.f / 382.f;
+        m_rect.right  = m_rect.left + 32.f / 382.f;
+        m_rect.bottom = m_rect.top + 32.f / 256.f;
 
         m_objmap = objmap;
 
-        battle_state_info.attack = 10;
-        battle_state_info.hp = 100;
-        battle_state_info.speed = 10;
+        // ステータス設定
+        m_battle_state_info.attack = 10;
+        m_battle_state_info.max_hp = 100;
+        m_battle_state_info.hp = m_battle_state_info.max_hp;
+        m_battle_state_info.speed = 10;
+
+        // アニメーション情報
+        m_animation_time = 0;
+        m_animation_count = 1;
     }
 
     @Override
@@ -82,14 +90,15 @@ public class ObjPlayer extends Obj
 
                 if(distance == 1)
                 {
-                    // 戦闘
-                    ArrayList obj_list = ObjectManager.GetObjectListCopy();
+                    // 現在あるオブジェクトをすべて取得
+                    ArrayList<Obj> obj_list = ObjectManager.GetObjectListCopy();
 
+                    // オブジェクトをすべて取得
                     for(Iterator<Obj> itr = obj_list.iterator(); itr.hasNext();)
                     {
                         Obj object = itr.next();
-                        object.SetObjState(Obj_State.No_Update); // 更新関数を止める
-                        object.SetObjState(Obj_State.No_Draw);   // 描画関数を止める
+                        object.EnableObjState(Obj_State.StopUpdate); // 更新関数を止める
+                        object.EnableObjState(Obj_State.StopDraw);   // 描画関数を止める
                     }
 
                     // 戦闘シーンへ
@@ -123,6 +132,30 @@ public class ObjPlayer extends Obj
         // マップをスクロールさせる(主人公を動かさずに、スクロールによって動いているように見せる)
         m_objmap.Map_Move_Scroll(m_velocity_x, m_velocity_y);
 
+        MoveAnimation();
+
+        // キャラクターの移動の向きによって、画像の切り取り位置を変える
+        if(m_velocity_y < 0.f)
+        {
+            m_rect.top = 128.f / 256.f;
+            m_rect.bottom = m_rect.top + 32.f / 256.f;
+        }
+        else if(m_velocity_x < 0.f)
+        {
+            m_rect.top = 160.f / 256.f;
+            m_rect.bottom = m_rect.top + 32.f / 256.f;
+        }
+        else if(m_velocity_x > 0.f)
+        {
+            m_rect.top = 192.f / 256.f;
+            m_rect.bottom = m_rect.top + 32.f / 256.f;
+        }
+        else if(m_velocity_y > 0.f)
+        {
+            m_rect.top = 224.f / 256.f;
+            m_rect.bottom = m_rect.top + 32.f / 256.f;
+        }
+
         // 移動し終わったら、リストから後ろのデータを削除
         if(m_move_amount >= ObjMap.final_object_size)
         {
@@ -136,7 +169,46 @@ public class ObjPlayer extends Obj
     @Override
     public void Draw(GL10 gl)
     {
-        GraphicUtil.drawTexture(gl, m_x, m_y, 0.25f, 0.25f, MyRenderer.m_player_texture,
+        GraphicUtil.drawTexture(gl, m_x, m_y, 0.25f, 0.25f, MyRenderer.m_char_texture,
                 m_rect, 1.f, 1.f, 1.f, 1.f);
+    }
+
+    // ステータス情報を返す関数
+    public BattleStateInfo GetBattleState()
+    {
+        return m_battle_state_info;
+    }
+
+    // ステータス情報を設定する関数
+    public void SetBattleStateInfo(BattleStateInfo battle_state_info)
+    {
+        m_battle_state_info = battle_state_info;
+    }
+
+    private void MoveAnimation()
+    {
+        if(abs(m_velocity_x) > 0.f || abs(m_velocity_y) > 0.f)
+        {
+            if(m_animation_time > m_final_animation_interval)
+            {
+                m_animation_count++;
+                m_animation_time = 0;
+
+                if(m_animation_count > 2)
+                {
+                    m_animation_count = 0;
+                }
+            }
+
+            m_animation_time++;
+        }
+        else
+        {
+            m_animation_count = 1;
+            m_animation_time = 0;
+        }
+
+        m_rect.left = 192.f / 382.f + (32.f / 382.f) * m_animation_count;
+        m_rect.right = m_rect.left + 32.f / 382.f;
     }
 }

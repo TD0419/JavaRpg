@@ -11,7 +11,6 @@ import com.example.student.rpg.Battle.ObjBattleEnemy;
 import com.example.student.rpg.Battle.ObjPlayerCommand;
 import com.example.student.rpg.Scene.SceneManager;
 
-
 import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer
@@ -24,6 +23,8 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public static int m_attack_select_texture;
     public static int m_messege_window_texture;
     public static int m_block_texture;
+    public static int m_char_texture;
+    public static int m_battle_background;
 
     private ObjBattleManager m_battle_manager;
     private ObjBattlePlayer m_battle_player;
@@ -99,11 +100,14 @@ public class MyRenderer implements GLSurfaceView.Renderer
         int h_offset = (height - h) / 2;
         gl.glViewport(w_offset, h_offset, w, h);
 
-        m_player_texture       = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.hero);
-        m_title_back_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.title_back_ground);
-        m_attack_select_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.attack_select);
+        m_player_texture         = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.hero);
+        m_title_back_texture     = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.title_back_ground);
+        m_attack_select_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.attack_select);
         m_messege_window_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.box_red);
         m_block_texture          = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.normalice_block);
+        m_char_texture           = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.freechara1);
+        m_battle_background      = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.battle_background);
+
         //m_left_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.left_button);
         //m_right_botton_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.right_button);
         //m_down_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.buttom_button);

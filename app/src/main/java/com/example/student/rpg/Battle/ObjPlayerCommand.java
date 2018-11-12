@@ -24,8 +24,8 @@ public class ObjPlayerCommand extends Obj
     public ObjPlayerCommand()
     {
         m_is_look = true;
-        m_attack_button_width = 0.5f;
-        m_attack_button_height = 0.5f;
+        m_attack_button_width = 0.3f;
+        m_attack_button_height = 0.3f;
         m_attack_button_aabb.top    = m_attack_button.y + m_attack_button_height / 2.f;
         m_attack_button_aabb.left   = m_attack_button.x - m_attack_button_width  / 2.f;
         m_attack_button_aabb.right  = m_attack_button.x + m_attack_button_width  / 2.f;
@@ -57,7 +57,7 @@ public class ObjPlayerCommand extends Obj
         // このオブジェクトが見える状態なら
         if(m_is_look == true)
         {
-            GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y, 0.5f, 0.5f, m_attack_select_texture);
+            GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y, m_attack_button_width, m_attack_button_height, m_attack_select_texture);
         }
     }
 

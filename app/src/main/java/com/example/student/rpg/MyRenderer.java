@@ -25,11 +25,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
     public static int m_block_texture;
     public static int m_char_texture;
     public static int m_battle_background;
-
-    private ObjBattleManager m_battle_manager;
-    private ObjBattlePlayer m_battle_player;
-    private ObjBattleEnemy m_battle_enemy;
-    private ObjPlayerCommand m_player_command;
+    public static int m_bat_enemy_texture;
 
     public MyRenderer(Context context)
     {
@@ -107,6 +103,7 @@ public class MyRenderer implements GLSurfaceView.Renderer
         m_block_texture          = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.normalice_block);
         m_char_texture           = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.freechara1);
         m_battle_background      = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.battle_background);
+        m_bat_enemy_texture      = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.bat_enemy);
 
         //m_left_botton_texture  = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.left_button);
         //m_right_botton_texture = GraphicUtil.loadTexture(Global.gl, Global.context.getResources(), R.drawable.right_button);

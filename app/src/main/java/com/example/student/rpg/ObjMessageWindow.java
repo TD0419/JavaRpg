@@ -32,8 +32,8 @@ public class ObjMessageWindow extends Obj
     // メッセージウィンドウの文字変更
     public void SetMsseageText(String text)
     {
-        text = "あいうえおかきくけこさしすせそたちつてと";
         int length = text.length();
+        // 一定の文字数になったら文字を2行に分ける
         if(length >= 12)
         {
             m_messeage_text1 = text.substring(0, 12);
@@ -42,6 +42,7 @@ public class ObjMessageWindow extends Obj
         else
         {
             m_messeage_text1 = text;
+            m_messeage_text2 = "";
         }
     }
 

@@ -56,6 +56,12 @@ public class ObjPlayerCommand extends Obj
                     m_attack_button.touch = true;
                 }
 
+                if(Collision.HitPointAndAABB(Global.touch_x, Global.touch_y,
+                        m_escape_button_aabb) == true)
+                {
+                    m_escape_button.touch = true;
+                }
+
                 Global.touch_push = false;
             }
         }
@@ -67,7 +73,11 @@ public class ObjPlayerCommand extends Obj
         // このオブジェクトが見える状態なら
         if(m_is_look == true)
         {
-            GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y, m_attack_button_width, m_attack_button_height, m_attack_select_texture);
+            GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y,
+                    m_attack_button_width, m_attack_button_height, m_attack_select_texture);
+
+            GraphicUtil.drawTexture(Global.gl, m_escape_button.x, m_escape_button.y,
+                    m_escape_button_width, m_escape_button_height, m_escape_select_texture);
         }
     }
 

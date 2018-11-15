@@ -14,9 +14,9 @@ import static android.graphics.Color.WHITE;
 
 public class ObjBattleEnemy extends ObjBattle
 {
-    public ObjBattleEnemy()
+    public ObjBattleEnemy(String name)
     {
-        m_name = "敵";
+        m_name = name;
 
         m_state_info.hp = 90;
         m_state_info.attack = 4;
@@ -32,6 +32,7 @@ public class ObjBattleEnemy extends ObjBattle
                 1.f, 1.f, MyRenderer.m_bat_enemy_texture);
 
         FontTexture.DrawString(gl, -1.3f, 0.8f, 0.2f, 0.2f,
-                m_name + " HP:" + String.valueOf(m_state_info.hp), 1.f, 1.f, 1.f, 1.f);
+                m_name + " HP:" + String.valueOf(m_state_info.hp),
+                1.f, 1.f, 1.f, 1.f);
     }
 }

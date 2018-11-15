@@ -4,11 +4,10 @@ import com.example.student.rpg.Button_Data;
 import com.example.student.rpg.Collision;
 import com.example.student.rpg.Global;
 import com.example.student.rpg.GraphicUtil;
+import com.example.student.rpg.MyRenderer;
 import com.example.student.rpg.Obj;
 
 import javax.microedition.khronos.opengles.GL10;
-
-import static com.example.student.rpg.MyRenderer.m_attack_select_texture;
 
 public class ObjPlayerCommand extends Obj
 {
@@ -74,10 +73,10 @@ public class ObjPlayerCommand extends Obj
         if(m_is_look == true)
         {
             GraphicUtil.drawTexture(Global.gl, m_attack_button.x, m_attack_button.y,
-                    m_attack_button_width, m_attack_button_height, m_attack_select_texture);
+                    m_attack_button_width, m_attack_button_height, MyRenderer.m_attack_select_texture);
 
-            GraphicUtil.drawTexture(Global.gl, m_escape_button.x, m_escape_button.y,
-                    m_escape_button_width, m_escape_button_height, m_escape_select_texture);
+            //GraphicUtil.drawTexture(Global.gl, m_escape_button.x, m_escape_button.y,
+            //        m_escape_button_width, m_escape_button_height, m_escape_select_texture);
         }
     }
 

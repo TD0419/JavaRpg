@@ -49,11 +49,10 @@ public class ObjBattleManager extends Obj implements Runnable
 //        m_battle_player = new ObjBattlePlayer();
 //        m_object_list.add(m_battle_player);
 
-        m_battle_enemy = new ObjBattleEnemy();
+        m_battle_enemy = new ObjBattleEnemy("コウモリ");
         m_object_list.add(m_battle_enemy);
 
         // 戦闘を管理するマルチスレッドを作成、起動
-        m_is_thread_end = false;
         m_thread = new Thread(this);
         m_thread.start();
     }
@@ -99,15 +98,14 @@ public class ObjBattleManager extends Obj implements Runnable
                         // 戦闘終了判定(誰かのHPが0以下になったら、戦闘終了)
                         if(defence_obj_battle.GetBattleState().hp <= 0)
                         {
-                            m_is_thread_end = true;
                             GoFieldMap();
+                            EnableObjState(Obj_State.ObjDelete);
+                            return;
                         }
 
                         break;
                     }
                 }
-
-                if(m_is_thread_end == true) break; // マルチスレッドを閉じるフラグがたっていれば、
 
                 // 画面をタッチするまで処理を止める
                 Stop_Touch_Move();
@@ -118,9 +116,6 @@ public class ObjBattleManager extends Obj implements Runnable
             // 戦闘コマンドを復活させる
             m_player_command.SetLookAt(true);
         }
-
-        // バトルマネージャーも削除
-        EnableObjState(Obj_State.ObjDelete);
     }
 
     @Override
